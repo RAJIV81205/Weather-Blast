@@ -18,18 +18,40 @@ body {
 }
 
 header {
-    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 20px;
     height: 80px;
     background-color: rgba(106, 156, 137, 0.7);
-    border: 2px solid rgba(22, 66, 60, 1);
     border-radius: 50px;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 20px auto;
+    width: 90%;
+    border: 2px solid rgba(22, 66, 60, 1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.logo-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    position: relative;
+    justify-self: start;
+}
+
+
+
+header img {
+    height: 55px;
+    width: 55px;
+    border-radius: 100%;
+    object-fit: contain;
+    background-color: rgba(233, 239, 236, 0.9);
+    padding: 3px;
+}
+
+header img:hover {
+    transform: none;
+    opacity: 0.9;
 }
 
 #dark-mode {
@@ -53,32 +75,71 @@ td {
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
-@media (max-width: 768px) {
+
+
+header h1 {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    font-family: "Fira Code", monospace;
+    color: rgba(22, 66, 60, 1);
+    font-size: 2.2em;
+    margin: 0;
+    -webkit-text-stroke: 1px black;
+    gap: 15px;
+}
+
+@media (max-width: 766px) {
     header {
+        display: flex;
         flex-direction: column;
+        align-items: center;
         height: auto;
         padding: 10px 0;
-        position: relative;
+    }
+
+    header img {
+        height: 45px;
+        width: 45px;
+
+    }
+
+    .top-bar {
+        display: flex;
+        flex-direction: row;
+        /* Ensure row layout */
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+        flex-wrap: nowrap;
+        /* Prevent wrapping */
+        gap: 10px;
+        /* Optional spacing */
+        margin-bottom: 10px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: start;
+        justify-items: start;
+        justify-content: start;
+        margin-right: 230px;
+        margin-bottom: 10px;
     }
 
     #dark-mode {
-        margin-top: 10px;
-        position: static;
+        display: flex;
+        justify-content: flex-center;
+        margin-right: 20px;
+    }
+
+    header h1 {
+        font-size: 1.8em;
+        text-align: center;
     }
 }
 
-h1 {
-    font-family: "Fira Code", monospace;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    color: rgba(22, 66, 60, 1);
-    font-size: 2.5em;
-    align-items: center;
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 1px;
 
-}
 
 h2 {
     margin-top: 20px;
@@ -307,19 +368,28 @@ td {
 
 .forecasttable {
     width: 90%;
-    overflow-x: scroll;
-
+    overflow-x: auto; /* Enable horizontal scrolling */
+    margin: 0 auto; /* Center the table */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .forecasttable table {
     width: 100%;
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
 }
 
 .forecasttable th {
-    text-wrap: nowrap;
+    white-space: nowrap; /* Prevent text wrapping */
     color: black;
     background-color: rgb(104, 239, 151);
+    padding: 10px; /* Add padding for better spacing */
+    text-align: left; /* Align text to the left */
+}
 
+.forecasttable td {
+    padding: 10px; /* Add padding for table cells */
+    border: 1px solid #ddd; /* Light border for table cells */
 }
 
 .forecasttable tr:nth-of-type(7) {
@@ -327,11 +397,79 @@ td {
 }
 
 .forecasttable::-webkit-scrollbar {
-    display: none;
+    height: 8px; /* Height of the scrollbar */
+}
+
+.forecasttable::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+.forecasttable::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); /* Color of the scrollbar track */
 }
 
 
-/* Toggle Switch Styling */
+.weather-card {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 0px;
+}
+
+.weather-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.weather-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#weat {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-right: 10px;
+}
+
+.unit-toggle-container {
+    display: flex;
+    align-items: center;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 8px 15px;
+    border-radius: 50px;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.unit-toggle-container:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+#unitLabel {
+    font-weight: 500;
+    color: #3b82f6;
+    font-size: 0.9rem;
+}
+
+/* Toggle Switch Styling - Enhanced */
 .switch {
     position: relative;
     display: inline-block;
@@ -352,10 +490,10 @@ td {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #d1d1d1;
-    transition: 0.4s ease-in-out;
-    border-radius: 30px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #e2e8f0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    border-radius: 34px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .slider:before {
@@ -388,33 +526,77 @@ input:checked + .slider:before {
 }
 
 
+/* Responsive Design */
+@media (max-width: 640px) {
+    .weather-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .weather-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    #weat {
+        font-size: 1.3rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .unit-toggle-container {
+        align-self: flex-end;
+        padding: 6px 12px;
+    }
+
+    .switch {
+        width: 54px;
+        height: 27px;
+    }
+
+    .slider:before {
+        height: 21px;
+        width: 21px;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(27px);
+    }
+}
+
+.weather-card:hover .unit-toggle-container {
+    animation: pulse 1.5s infinite;
+}
+
+
 /* Scroll To Top Button */
 #backToTopBtn {
-  position: fixed;
-  bottom: 120px;
-  right: 10px;
-  width: 50px;
-  height: 50px;
-  background-color: #7baea1;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 1000;
+    position: fixed;
+    bottom: 120px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: #7baea1;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 #backToTopBtn i {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 #backToTopBtn:hover {
-  background-color: #5e9688;
-  transform: scale(1.1);
+    background-color: #5e9688;
+    transform: scale(1.1);
 }
 
 /* Footer Styling */
@@ -429,9 +611,9 @@ footer {
 }
 
 @media (max-width: 768px) {
-  footer {
-    grid-template-columns: 1fr;
-  }
+    footer {
+        grid-template-columns: 1fr;
+    }
 }
 
 .logo-name {
@@ -448,6 +630,7 @@ footer {
     -webkit-text-stroke-color: black;
     -webkit-text-stroke-width: 1px;
 }
+
 .logo-name p {
     padding-top: 0.5rem;
 }

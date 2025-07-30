@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather</title>
+    <title>Weather-Blast</title>
+    <link rel="icon" type="image/png" href="icon.png" />
     <link rel="stylesheet" href="style.css">
     <script
         src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap"
         defer async></script>
 
-    <!-- Font Awesome CDN -->
+        <!-- Font Awesome CDN -->
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -19,15 +20,19 @@
 </head>
 <!-- Back to Top Button -->
 <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top">
-  <i class="fas fa-arrow-up"></i>
+    <i class="fas fa-arrow-up"></i>
 </button>
 
 
 <body>
     <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="Weather Blast Logo">
+        </div>
         <h1>{Weather-Blast}</h1>
         <button id="dark-mode">☀️</button>
     </header>
+
 
 
     <div class="up-container">
@@ -51,16 +56,16 @@
         </div>
     </div>
 
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-        <h2 style="margin: 0;" id="weat">Weather Information</h2>
-        <div style="display: flex; align-items: center; gap: 10px; margin-left: 40px;">
-            <span id="unitLabel">°C ⇄ °F</span>
-            <label class="switch">
-                <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit">
-                <!-- Toggle for Celsius/Fahrenheit -->
-                <span class="slider round"></span>
-            </label>
-
+    <div class="weather-card">
+        <div class="weather-header">
+            <h2 id="weat">Weather Information</h2>
+            <div class="unit-toggle-container">
+                <span id="unitLabel">°C ⇄ °F</span>
+                <label class="switch">
+                    <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit">
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -150,7 +155,7 @@
             <td id="wi1">Info</td>
         </tr>
 
-        
+
     </table>
 
     <h2 id="forecast">7 days Weather Forecast</h2>
@@ -231,9 +236,12 @@
         <div class="contact-sm">
             <p>Contact Us:</p>
             <div class="links">
-            <a href="<------add-instagram------>"><img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40"></a>
-            <a href="<------add-linkedin----->"><img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40"></a>
-            <a href="https://github.com/RAJIV81205"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40"></a>
+                <a href="<------add-instagram------>"><img
+                        src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40"></a>
+                <a href="<------add-linkedin----->"><img
+                        src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40"></a>
+                <a href="https://github.com/RAJIV81205"><img
+                        src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40"></a>
             </div>
         </div>
         <div class="copywright">
