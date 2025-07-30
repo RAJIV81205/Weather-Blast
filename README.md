@@ -1,9 +1,18 @@
 # 🌦️ Weather Blast - Weather App with Air Pollution Insights 🌫️
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) [![GSSoC](https://img.shields.io/badge/GSSoC-2025-blue)](https://gssoc.girlscript.tech/) [![Netlify Status](https://api.netlify.com/api/v1/badges/6b263274-fa27-4813-9e3d-3dbb4f005abf/deploy-status)](https://app.netlify.com/sites/weather-blast/deploys)
 
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![GSSoC](https://img.shields.io/badge/GSSoC-2025-blue)](https://gssoc.girlscript.tech/)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/6b263274-fa27-4813-9e3d-3dbb4f005abf/deploy-status)](https://app.netlify.com/sites/weather-blast/deploys)
+## Leaderboard
+
+| Issue No.                                                   | Title                                                                            | Author                                                                                                                       | Level | Points |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
+| [2](https://github.com/RAJIV81205/Weather-Blast/issues/2)   | Adding a dark mode toggle                                                        | [raunak-iiitian](https://github.com/RAJIV81205/Weather-Blast/issues?q=is%3Aissue%20state%3Aclosed%20author%3Araunak-iiitian) | 2     | 7      |
+| [7](https://github.com/RAJIV81205/Weather-Blast/issues/7)   | Adding a footer                                                                  | [raunak-iiitian](https://github.com/RAJIV81205/Weather-Blast/issues?q=is%3Aissue%20state%3Aclosed%20author%3Araunak-iiitian) | 3     | 10     |
+| [8](https://github.com/RAJIV81205/Weather-Blast/issues/8)   | Add a “Back to Top” Button for Smoother Navigation                               | [tanush-space](https://github.com/tanush-space)                                                                              | 1     | 3      |
+| [5](https://github.com/RAJIV81205/Weather-Blast/issues/5)   | Add toggle to switch between Celsius and Fahrenheit                              | [milan-deori](https://github.com/milan-deori)                                                                                | 2     | 7      |
+| [14](https://github.com/RAJIV81205/Weather-Blast/issues/14) | Enhance Card UI: Add Hover Animation to .card Card                               | [tanush-space](https://github.com/tanush-space)                                                                              | 2     | 7      |
+| [1](https://github.com/RAJIV81205/Weather-Blast/issues/1)   | adding hover effect to the search button and enhancing the "Use Current Location | [RAJVEER42](https://github.com/RAJVEER42)                                                                                    | 2     | 7      |
+
+
 
 **🚀 Live Demo:** [Weather Blast](https://weather-blast.netlify.app/)
 
@@ -18,12 +27,14 @@ This project is part of **GirlScript Summer of Code (GSSoC) 2025**! We welcome c
 Before contributing, please follow these guidelines:
 
 ### ⭐ Getting Started
+
 1. **Star this repository** ⭐ (it shows your appreciation for the project)
 2. **Fork this repository** to your GitHub account
 3. **Clone your forked repository** to your local machine
 4. **Create a new branch** for your feature/fix
 
 ### 📝 Pull Request Guidelines
+
 1. **Describe the issue properly** - Provide a clear and detailed description of what the PR addresses
 2. **Reference the issue number** - Link your PR to the relevant issue using `Fixes #issue_number`
 3. **Follow the existing code style** - Maintain consistency with the current codebase
@@ -34,6 +45,7 @@ Before contributing, please follow these guidelines:
 8. **Be respectful** - Follow our Code of Conduct and be respectful to other contributors
 
 ### 🚫 What NOT to do
+
 - Don't submit PRs without linking them to an issue
 - Don't make changes unrelated to the issue you're solving
 - Don't submit duplicate PRs
@@ -42,7 +54,9 @@ Before contributing, please follow these guidelines:
 ## 🤝 How to Contribute
 
 ### For Beginners
+
 If you're new to open source, start with these types of contributions:
+
 - 📚 Improve documentation
 - 🐛 Report bugs
 - 🎨 Enhance UI/UX
@@ -50,6 +64,7 @@ If you're new to open source, start with these types of contributions:
 - 🧪 Write tests
 
 ### For Experienced Developers
+
 - 🚀 Add new features
 - ⚡ Optimize performance
 - 🔒 Improve security
@@ -75,27 +90,30 @@ If you're new to open source, start with these types of contributions:
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 1. **API Keys**:
    - [OpenWeatherMap API](https://openweathermap.org/api): For weather and air quality data
    - [GeoApify API](https://www.geoapify.com/): For geocoding services
 
 ### Installation Steps
+
 1. **Fork and Clone**
    ```bash
    git clone https://github.com/RAJIV81205/Weather-Blast.git
    cd Weather-Blast
    ```
 
-2. **Add your API keys** to the `script.js` file:
+2. **Add your API keys to the script.js file**:
    ```javascript
-   const apiKey = 'your_openweathermap_api_key';  // OpenWeatherMap API key
+   const apiKey = 'your_openweathermap_api_key'; // OpenWeatherMap API key
    const geoAPI = 'your_geoapify_api_key'; // GeoApify API key
    ```
 
-3. **Open `index.html`** in your browser to run the application locally
+3. **Open index.html in your browser** to run the application locally
 
 ## 📂 File Structure
-```plaintext
+
+```
 Weather-Blast/
 │
 ├── index.html       # Main HTML structure
@@ -108,13 +126,13 @@ Weather-Blast/
 
 ## 🔧 Key JavaScript Functions
 
-- **`getWeatherByCity()`**: Fetches weather and air pollution data for a given city
-- **`getWeatherByLocation()`**: Gets the user's geolocation for weather and air quality data
-- **`fetchLatLon()`**: Fetches coordinates from GeoApify if the city isn't found
-- **`fetchWeatherByCoordinates()`**: Fetches weather data using latitude and longitude
-- **`fetchAirQuality()`**: Retrieves air quality data based on geographic coordinates
-- **`displayWeather()`**: Displays weather information
-- **`displayAirQuality()`**: Shows air pollution details like AQI, PM2.5, and PM10 levels
+- **getWeatherByCity()**: Fetches weather and air pollution data for a given city
+- **getWeatherByLocation()**: Gets the user's geolocation for weather and air quality data
+- **fetchLatLon()**: Fetches coordinates from GeoApify if the city isn't found
+- **fetchWeatherByCoordinates()**: Fetches weather data using latitude and longitude
+- **fetchAirQuality()**: Retrieves air quality data based on geographic coordinates
+- **displayWeather()**: Displays weather information
+- **displayAirQuality()**: Shows air pollution details like AQI, PM2.5, and PM10 levels
 
 ## 🧰 Error Handling
 
@@ -125,17 +143,11 @@ Weather-Blast/
 
 We appreciate all the contributors who have helped make this project better!
 
-<!-- Contributors list will be automatically updated -->
-<a href="https://github.com/RAJIV81205/Weather-Blast/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=RAJIV81205/Weather-Blast" />
-</a>
+[![Contributors](https://contrib.rocks/image?repo=RAJIV81205/Weather-Blast)](https://github.com/RAJIV81205/Weather-Blast/graphs/contributors)
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/RAJIV81205/Weather-Blast?style=social)
-![GitHub forks](https://img.shields.io/github/forks/RAJIV81205/Weather-Blast?style=social)
-![GitHub issues](https://img.shields.io/github/issues/RAJIV81205/Weather-Blast)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/RAJIV81205/Weather-Blast)
+![GitHub stars](https://img.shields.io/github/stars/RAJIV81205/Weather-Blast?style=social) ![GitHub forks](https://img.shields.io/github/forks/RAJIV81205/Weather-Blast?style=social) ![GitHub issues](https://img.shields.io/github/issues/RAJIV81205/Weather-Blast) ![GitHub pull requests](https://img.shields.io/github/issues-pr/RAJIV81205/Weather-Blast)
 
 ## 🤝 Code of Conduct
 
@@ -152,12 +164,10 @@ Please note that this project is released with a [Code of Conduct](CODE_OF_CONDU
 
 This project is open-source and available under the [MIT License](LICENSE).
 
----
-
 ### 🌟 Show your support
 
 Give a ⭐ if you found this project helpful!
 
 **Happy Contributing! 🎉**
 
-Made with ❤️ for GSSoC 2025
+**Made with ❤️ for GSSoC 2025**
