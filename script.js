@@ -134,6 +134,7 @@ function fetchWeatherByCoordinates(lat, lon) {
 }
 
 // === DISPLAY WEATHER DETAILS IN UI ===
+// === DISPLAY WEATHER DETAILS IN UI ===
 function displayWeather(data) {
     const { temp, feels_like, humidity, pressure } = data.main;
     const visibility = data.visibility / 1000;
@@ -149,32 +150,77 @@ function displayWeather(data) {
     fetchPollution(lat, lon);
     getWeatherForecast(lat, lon);
 
+    // Titles
     document.getElementById("weat").innerText = `Weather Information : ${city}`;
-    document.getElementById("air").innerText = `Air Pollution : ${city}`;
 
-    // Store base Celsius temp in dataset
+    // Store Celsius in dataset
     ["temp", "fl", "temp1", "fl1"].forEach(id => {
         document.getElementById(id).dataset.celsius = id.includes("fl") ? feels_like : temp;
     });
 
-    // Detect toggle and update unit display
+    // Unit toggle
     const isCelsius = !isFahrenheitToggled();
     updateTemperatureDisplay(isCelsius);
 
-    // Update UI (non-temperature)
-    ["wi", "wi1"].forEach(id => document.getElementById(id).innerText = weatherdes);
-    ["date", "date1"].forEach(id => document.getElementById(id).innerText = date);
-    ["city", "city1"].forEach(id => document.getElementById(id).innerText = city);
-    ["humi", "humi1"].forEach(id => document.getElementById(id).innerText = `${humidity}%`);
-    ["press", "press1"].forEach(id => document.getElementById(id).innerText = `${pressure} hPa`);
-    ["visi", "visi1"].forEach(id => document.getElementById(id).innerText = `${visibility} Km`);
-    ["ws", "ws1"].forEach(id => document.getElementById(id).innerText = `${windSpeed} m/s`);
-    ["sr", "sr1"].forEach(id => document.getElementById(id).innerText = sunrise);
-    ["ss", "ss1"].forEach(id => document.getElementById(id).innerText = sunset);
-    ["cc", "cc1"].forEach(id => document.getElementById(id).innerText = country);
+    // --- Weather data for BIG TABLE and SMALL TABLE ---
+
+    // City
+    document.getElementById("city1").innerText = city; // Corrected for Big Table
+    document.getElementById("city1_small").innerText = city;
+
+    // Date
+    document.getElementById("date1").innerText = date; // Corrected for Big Table
+    document.getElementById("date1_small").innerText = date;
+
+    // Weather Info (Description)
+    document.getElementById("wi").innerText = weatherdes;
+    document.getElementById("wi1").innerText = weatherdes;
+
+    // Humidity
+    document.getElementById("humi").innerText = `${humidity}%`;
+    document.getElementById("humi1").innerText = `${humidity}%`;
+
+    // Pressure
+    document.getElementById("press").innerText = `${pressure} hPa`;
+    document.getElementById("press1").innerText = `${pressure} hPa`;
+
+    // Visibility
+    document.getElementById("visi").innerText = `${visibility} Km`;
+    document.getElementById("visi1").innerText = `${visibility} Km`;
+
+    // Wind Speed
+    document.getElementById("ws").innerText = `${windSpeed} m/s`;
+    document.getElementById("ws1").innerText = `${windSpeed} m/s`;
+
+    // Sunrise
+    document.getElementById("sr").innerText = sunrise;
+    document.getElementById("sr1").innerText = sunrise;
+
+    // Sunset
+    document.getElementById("ss").innerText = sunset;
+    document.getElementById("ss1").innerText = sunset;
+
+    // Country Code
+    document.getElementById("cc").innerText = country;
+    document.getElementById("cc1").innerText = country;
 
     document.getElementById("city-input").value = '';
 }
+
+// Add an initial weather fetch when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    // Existing theme loading logic
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        toggle = 1; // important to allow toggling later
+        changedisplay();
+    } else if (savedTheme === "light") {
+        toggle = 0;
+        changedisplay();
+    }
+    // This will ensure the tables are populated when the page first loads.
+    fetchWeatherByCity("Kolkata");
+});
 
 // === CONVERSION HELPERS ===
 function celsiusToFahrenheit(c) { return (c * 9 / 5) + 32; }
@@ -206,6 +252,40 @@ function displayPollution(data) {
     document.getElementById("aqi").innerText = label;
     document.getElementById("aqi1").innerText = label;
 
+    const aqiBigElement = document.getElementById("aqi_big");
+    if (aqiBigElement) { // Always good to check if element exists before setting innerText
+        aqiBigElement.innerText = label;
+    }
+
+    // ✅ Health suggestion based on AQI
+    let healthMessage = "";
+    switch (aqi) {
+        case 1:
+            healthMessage = "Air quality is good. No health risk.";
+            break;
+        case 2:
+            healthMessage = "Air quality is fair. Sensitive people should take precautions.";
+            break;
+        case 3:
+            healthMessage = "Moderate risk for sensitive groups. Limit prolonged outdoor exertion.";
+            break;
+        case 4:
+            healthMessage = "Poor air quality. General public may experience discomfort.";
+            break;
+        case 5:
+            healthMessage = "Very poor. Avoid outdoor activities if possible.";
+            break;
+        default:
+            healthMessage = "Air quality data unavailable.";
+    }
+
+    // Insert this message into the DOM (You must add a tag with id="aqi-message" in HTML)
+    const messageElement = document.getElementById("aqi-message");
+    if (messageElement) {
+        messageElement.innerText = healthMessage;
+    }
+
+    // Existing pollutant values
     const pollutionMetrics = ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"];
     pollutionMetrics.forEach(metric => {
         const value = components[metric];
@@ -214,6 +294,7 @@ function displayPollution(data) {
         document.getElementById(label + "1").innerText = `${value} μg/m3`;
     });
 }
+
 
 // Forecast display with °C ⇄ °F toggle support
 function getWeatherForecast(lat, lon) {
@@ -316,25 +397,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Temperature toggle listener
-function updateTemperatureDisplay(isCelsius) {
-    const tempElements = document.querySelectorAll('[data-celsius]');
-    tempElements.forEach(element => {
-        const tempC = parseFloat(element.dataset.celsius);
-        const displayTemp = isCelsius ? `${tempC.toFixed(1)}°C` : `${((tempC * 9/5) + 32).toFixed(1)}°F`;
-        element.textContent = displayTemp;
-    });
-
-    const currentTemp = parseFloat(document.getElementById('temp').dataset.celsius);
-    const feelsLikeTemp = parseFloat(document.getElementById('fl').dataset.celsius);
-    document.getElementById('temp').textContent = isCelsius ? `${currentTemp}°C` : `${(currentTemp * 9/5 + 32).toFixed(1)}°F`;
-    document.getElementById('fl').textContent = isCelsius ? `${feelsLikeTemp}°C` : `${(feelsLikeTemp * 9/5 + 32).toFixed(1)}°F`;
-
-    // Refresh forecast with updated unit
-    if (lastForecastData) {
-        showWeatherForecast(lastForecastData);
-    }
-}
 
 // Save forecast data globally for reuse
 let lastForecastData = null;
@@ -372,16 +434,16 @@ window.onscroll = function () {
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-//added share button 
+//added share button
 const shareBtn = document.getElementById("shareBtn");
 shareBtn.style.display = "inline-block"; // show the button
 
 shareBtn.onclick = async () => {
-    const city = document.getElementById("city").textContent;
+    // Corrected: Use city1 from the main table
+    const city = document.getElementById("city1").textContent;
     const temperature = document.getElementById("temp").textContent;
     const description = document.getElementById("wi").textContent;
-    const aqi = document.getElementById("aqi").textContent;
+    const aqi = document.getElementById("aqi").textContent; // This will get the AQI from the span in pollution-info
 
     const shareText = `📍 ${city}\n🌡️ Temp: ${temperature}\n🌤️ ${description}\n🌫️ AQI: ${aqi}\nShared via Weather Blast`;
 
@@ -395,6 +457,7 @@ shareBtn.onclick = async () => {
             console.error("Share failed:", err);
         }
     } else {
+        // Fallback for browsers that don't support Web Share API
         navigator.clipboard.writeText(shareText).then(() => {
             alert("Copied to clipboard!");
         });
