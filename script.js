@@ -473,11 +473,31 @@ function showWeatherForecast(data) {
 const darkbtn = document.getElementById('dark-mode');
 let toggle = 1;
 function changedisplay() {
+    const logo = document.querySelector('.logo');
+    const header = document.querySelector('header');
+    const cards = document.querySelectorAll('.card');
+    
     if (toggle == 1) {
         // dark mode styling
         document.querySelector('body').style.backgroundColor = "rgba(17, 34, 29, 0.7)";
         document.querySelector('body').style.color = "rgb(233, 239, 236)";
         darkbtn.textContent = "🌙";
+        
+        // Dark mode logo and header
+        if (logo) {
+            logo.style.background = "linear-gradient(135deg, #2c5282, #4a7c59)";
+        }
+        if (header) {
+            header.style.background = "linear-gradient(135deg, rgba(45, 82, 130, 0.9), rgba(74, 124, 89, 0.8))";
+            header.style.borderColor = "rgba(233, 239, 236, 0.3)";
+        }
+        
+        // Dark mode cards
+        cards.forEach(card => {
+            card.style.background = "linear-gradient(135deg, rgba(45, 82, 130, 0.8), rgba(74, 124, 89, 0.7))";
+            card.style.borderColor = "rgba(233, 239, 236, 0.2)";
+        });
+        
         document.querySelectorAll("table, th, td").forEach(el => {
             el.style.border = "1px solid rgb(233, 239, 236)";
             el.style.color = "rgb(233, 239, 236)";
@@ -492,6 +512,22 @@ function changedisplay() {
         document.querySelector('body').style.backgroundColor = "rgb(233, 239, 236)";
         document.querySelector('body').style.color = "black";
         darkbtn.textContent = "☀️";
+        
+        // Light mode logo and header
+        if (logo) {
+            logo.style.background = "linear-gradient(135deg, #4a90e2, #7bcea3)";
+        }
+        if (header) {
+            header.style.background = "linear-gradient(135deg, rgba(106, 156, 137, 0.9), rgba(196, 218, 210, 0.8))";
+            header.style.borderColor = "rgba(22, 66, 60, 0.3)";
+        }
+        
+        // Light mode cards
+        cards.forEach(card => {
+            card.style.background = "linear-gradient(135deg, rgba(196, 218, 210, 0.95), rgba(233, 239, 236, 0.9))";
+            card.style.borderColor = "rgba(22, 66, 60, 0.2)";
+        });
+        
         document.querySelectorAll("table, th, td").forEach(el => {
             el.style.border = "1px solid rgba(22, 66, 60, 1)";
             el.style.color = "rgba(22, 66, 60, 1)";
