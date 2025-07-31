@@ -279,6 +279,80 @@ function showWeatherForecast(data) {
             el.style.border = "1px solid rgb(233, 239, 236)";
         });
     }
+
+
+ 
+    // Line Chart for Max & Min Temperatures
+ 
+    const ctx = document.getElementById('tempLineChart').getContext('2d');
+
+    const chartLabels = forecast.map(day => new Date(day.dt * 1000).toLocaleDateString());
+    const maxTempValues = forecast.map(day => isCelsius ? day.temp.max : (day.temp.max * 9/5 + 32));
+    const minTempValues = forecast.map(day => isCelsius ? day.temp.min : (day.temp.min * 9/5 + 32));
+
+    // Destroy previous chart if it exists
+    if (window.tempChart) {
+        window.tempChart.destroy();
+    }
+
+    window.tempChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [
+                {
+                    label: 'Max Temp',
+                    data: maxTempValues,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: 'Min Temp',
+                    data: minTempValues,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: toggle === 0 ? 'white' : 'black'
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '7-Day Temperature Trend',
+                    color: toggle === 0 ? 'white' : 'black'
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: `Temperature (${isCelsius ? '°C' : '°F'})`,
+                        color: toggle === 0 ? 'white' : 'black'
+                    },
+                    ticks: {
+                        color: toggle === 0 ? 'white' : 'black'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: toggle === 0 ? 'white' : 'black'
+                    }
+                }
+            }
+        }
+    });
+
 }
 
 // Dark-mode toggle
