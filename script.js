@@ -181,19 +181,7 @@ function celsiusToFahrenheit(c) { return (c * 9 / 5) + 32; }
 function fahrenheitToCelsius(f) { return (f - 32) * 5 / 9; }
 
 // === TOGGLE CELSIUS/FAHRENHEIT DISPLAY ===
-function updateTemperatureDisplay(isCelsius) {
-    const elements = ["temp", "fl", "temp1", "fl1"];
-    elements.forEach(id => {
-        const el = document.getElementById(id);
-        const c = parseFloat(el.dataset.celsius);
-        if (isCelsius) {
-            el.innerText = `${c.toFixed(1)}°C`;
-        } else {
-            const f = celsiusToFahrenheit(c);
-            el.innerText = `${f.toFixed(1)}°F`;
-        }
-    });
-}
+
 // === FETCH POLLUTION DATA ===
 function fetchPollution(lat, lon) { 
     const pollurl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
