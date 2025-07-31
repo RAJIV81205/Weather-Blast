@@ -258,6 +258,8 @@ function showWeatherForecast(data) {
     const icons = forecast.map(day => `<td class = "icons-block"><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
 
     document.getElementById("forecast").style.display = "block";
+    document.getElementById("forecast-section").style.display = "block";
+
     document.getElementById("forecast-table").innerHTML = `
         <tr><th>Date</th>${dates}</tr>
         <tr><th>Max-Temperature</th>${maxTemps}</tr>
@@ -319,38 +321,39 @@ function showWeatherForecast(data) {
             ]
         },
         options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: toggle === 0 ? 'white' : 'black'
-                    }
-                },
-                title: {
-                    display: true,
-                    text: '7-Day Temperature Trend',
-                    color: toggle === 0 ? 'white' : 'black'
-                }
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top',
+            labels: {
+                color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
+            }
+        },
+        title: {
+            display: true,
+            text: '7-Day Temperature Trend',
+            color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
+        }
+    },
+    scales: {
+        y: {
+            title: {
+                display: true,
+                text: `Temperature (${isCelsius ? '°C' : '°F'})`,
+                color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
             },
-            scales: {
-                y: {
-                    title: {
-                        display: true,
-                        text: `Temperature (${isCelsius ? '°C' : '°F'})`,
-                        color: toggle === 0 ? 'white' : 'black'
-                    },
-                    ticks: {
-                        color: toggle === 0 ? 'white' : 'black'
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: toggle === 0 ? 'white' : 'black'
-                    }
-                }
+            ticks: {
+                color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
+            }
+        },
+        x: {
+            ticks: {
+                color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
             }
         }
+    }
+}
+
     });
 
 }
