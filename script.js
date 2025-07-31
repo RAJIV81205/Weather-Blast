@@ -224,14 +224,31 @@ function displayWeather(data) {
 
 // Add an initial weather fetch when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-    // Existing theme loading logic
+    // Load saved theme or detect system preference
     const savedTheme = localStorage.getItem("theme");
+
     if (savedTheme === "dark") {
-        toggle = 1; // important to allow toggling later
+        toggle = 1; // Set to light so changedisplay() switches to dark
         changedisplay();
     } else if (savedTheme === "light") {
+        // Light mode
         toggle = 0;
-        changedisplay();
+        document.querySelector('body').style.backgroundColor = "rgb(233, 239, 236)";
+        document.querySelector('body').style.color = "black";
+        darkbtn.textContent = "☀️";
+    } else {
+        // No saved preference - detect system preference
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            toggle = 1;
+            changedisplay();
+        } else {
+            toggle = 0;
+            document.querySelector('body').style.backgroundColor = "rgb(233, 239, 236)";
+            document.querySelector('body').style.color = "black";
+            darkbtn.textContent = "☀️";
+            localStorage.setItem("theme", "light");
+        }
     }
     // This will ensure the tables are populated when the page first loads.
     fetchWeatherByCity("Kolkata");
@@ -486,20 +503,6 @@ function changedisplay() {
 
 darkbtn.addEventListener('click', changedisplay);
 
-// Check for saved theme in localStorage and apply on load
-document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-        toggle = 1; // important to allow toggling later
-        changedisplay();
-    } else if (savedTheme === "light") {
-        toggle = 0;
-        changedisplay();
-    }
-});
-
-
-
 // Save forecast data globally for reuse
 let lastForecastData = null;
 
@@ -565,6 +568,3 @@ shareBtn.onclick = async () => {
         });
     }
 };
-
-
-
