@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weather</title>
+  <title data-i18n="title">Weather</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script
@@ -20,14 +20,19 @@
   </button>
 
   <header>
-    <h1>{Weather-Blast}</h1>
+    <h1 data-i18n="header_title">{Weather-Blast}</h1>
+    <select id="language-switcher" aria-label="Select Language">
+      <option value="en">English</option>
+      <option value="te">Telugu</option>
+      <option value="hi">Hindi</option>
+    </select>
     <button id="dark-mode">☀️</button>
   </header>
 
   <div class="up-container">
     <div class="card">
-      <p class="first">ENTER YOUR LOCATION</p>
-      <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code" oninput="autoComplete()" />
+      <p class="first" data-i18n="enter_location">ENTER YOUR LOCATION</p>
+      <input type="text" id="city-input" data-i18n-placeholder="city_input_placeholder" placeholder="Enter city, State name or ZIP Code" oninput="autoComplete()" />
       <div id="suggestion-box">
         <div id="suggestion-0" class="suggestion"></div>
         <div id="suggestion-1" class="suggestion"></div>
@@ -35,9 +40,9 @@
         <div id="suggestion-3" class="suggestion"></div>
         <div id="suggestion-4" class="suggestion"></div>
       </div>
-      <button onclick="getWeatherByCity()">Search</button>
-      <p class="or">OR</p>
-      <button onclick="getWeatherByLocation()" id="locate">Use Current Location</button>
+      <button onclick="getWeatherByCity()" data-i18n="search_button">Search</button>
+      <p class="or" data-i18n="or">OR</p>
+      <button onclick="getWeatherByLocation()" id="locate" data-i18n="use_location">Use Current Location</button>
     </div>
     <div class="map-container">
       <div id="map"></div>
@@ -45,7 +50,7 @@
   </div>
 
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-    <h2 style="margin: 0;" id="weat">Weather Information</h2>
+    <h2 style="margin: 0;" id="weat" data-i18n="weather_info">Weather Information</h2>
     <div style="display: flex; align-items: center; gap: 10px; margin-left: 40px;">
       <span id="unitLabel">°C ⇄ °F</span>
       <label class="switch">
@@ -55,32 +60,30 @@
     </div>
   </div>
 
+  <!-- Search -->
+  <div id="recent-searches">
+    <h3 data-i18n="recent_searches">Recent Searches</h3>
+    <ul id="recent-list">
+      <li data-i18n="no_recent_searches">No recent searches yet.</li>
+    </ul>
+    <button id="reset-searches-btn" aria-label="Reset search history" data-i18n="clear_search_history">Clear Search History</button>
+  </div>
 
-  <!--Search-->
-<div id="recent-searches">
-  <h3>Recent Searches</h3>
-  <ul id="recent-list">
-    <li>No recent searches yet.</li>
-  </ul>
-   <button id="reset-searches-btn" aria-label="Reset search history">Clear Search History</button>
-</div>
-
-
-<!-- Big Table -->
+  <!-- Big Table -->
   <table class="big">
     <tr>
-      <th>Date</th>
-      <th>Location</th>
-      <th>Temperature</th>
-      <th>Feels Like</th>
-      <th>Humidity</th>
-      <th>Pressure</th>
-      <th>Visibility</th>
-      <th>Wind Speed</th>
-      <th>Sunrise</th>
-      <th>Sunset</th>
-      <th>Country Code</th>
-      <th>Weather Info</th>
+      <th data-i18n="date">Date</th>
+      <th data-i18n="location">Location</th>
+      <th data-i18n="temperature">Temperature</th>
+      <th data-i18n="feels_like">Feels Like</th>
+      <th data-i18n="humidity">Humidity</th>
+      <th data-i18n="pressure">Pressure</th>
+      <th data-i18n="visibility">Visibility</th>
+      <th data-i18n="wind_speed">Wind Speed</th>
+      <th data-i18n="sunrise">Sunrise</th>
+      <th data-i18n="sunset">Sunset</th>
+      <th data-i18n="country_code">Country Code</th>
+      <th data-i18n="weather_info_col">Weather Info</th>
     </tr>
     <tr>
       <td id="date1">DD/MM/YY</td>
@@ -100,88 +103,89 @@
 
   <!-- Small Table -->
   <table class="small">
-    <tr><th>Date</th><td id="date1_small">DD/MM/YY</td></tr>
-    <tr><th>Location</th><td id="city1_small">City</td></tr>
-    <tr><th>Temperature</th><td id="temp1" data-celsius="0">0°C</td></tr>
-    <tr><th>Feels Like</th><td id="fl1" data-celsius="0">0°C</td></tr>
-    <tr><th>Humidity</th><td id="humi1">0 %</td></tr>
-    <tr><th>Pressure</th><td id="press1">0 hPa</td></tr>
-    <tr><th>Visibility</th><td id="visi1">0 Km</td></tr>
-    <tr><th>Wind Speed</th><td id="ws1">0 m/s</td></tr>
-    <tr><th>Sunrise</th><td id="sr1">00:00</td></tr>
-    <tr><th>Sunset</th><td id="ss1">00:00</td></tr>
-    <tr><th>Country Code</th><td id="cc1">IN</td></tr>
-    <tr><th>Weather Info</th><td id="wi1">Info</td></tr>
+    <tr><th data-i18n="date">Date</th><td id="date1_small">DD/MM/YY</td></tr>
+    <tr><th data-i18n="location">Location</th><td id="city1_small">City</td></tr>
+    <tr><th data-i18n="temperature">Temperature</th><td id="temp1" data-celsius="0">0°C</td></tr>
+    <tr><th data-i18n="feels_like">Feels Like</th><td id="fl1" data-celsius="0">0°C</td></tr>
+    <tr><th data-i18n="humidity">Humidity</th><td id="humi1">0 %</td></tr>
+    <tr><th data-i18n="pressure">Pressure</th><td id="press1">0 hPa</td></tr>
+    <tr><th data-i18n="visibility">Visibility</th><td id="visi1">0 Km</td></tr>
+    <tr><th data-i18n="wind_speed">Wind Speed</th><td id="ws1">0 m/s</td></tr>
+    <tr><th data-i18n="sunrise">Sunrise</th><td id="sr1">00:00</td></tr>
+    <tr><th data-i18n="sunset">Sunset</th><td id="ss1">00:00</td></tr>
+    <tr><th data-i18n="country_code">Country Code</th><td id="cc1">IN</td></tr>
+    <tr><th data-i18n="weather_info_col">Weather Info</th><td id="wi1">Info</td></tr>
   </table>
 
   <!-- Forecast Section -->
-  <h2 id="forecast">7 days Weather Forecast</h2>
+  <h2 id="forecast" data-i18n="forecast_title">7 days Weather Forecast</h2>
   <div class="forecasttable">
     <table id="forecast-table"></table>
   </div>
 
   <!-- Pollution Section -->
   <section id="pollution-section" class="pollution-container">
-    <h2>Air Pollution</h2>
+    <h2 data-i18n="air_pollution">Air Pollution</h2>
     <div class="pollution-info">
-      <p><strong>AQI Level:</strong> <span id="aqi">-</span></p>
-      <p><strong>Health Message:</strong> <span id="aqi-message">Loading...</span></p>
+      <p><strong data-i18n="aqi_level">AQI Level:</strong> <span id="aqi">-</span></p>
+      <p><strong data-i18n="health_message">Health Message:</strong> <span id="aqi-message">Loading...</span></p>
     </div>
   </section>
 
   <!-- Air Pollution Table (Big) -->
- <table class="big">
-  <tr>
-    <th>AQI</th>
-    <th>Carbon Monoxide</th>
-    <th>Nitrogen Monoxide</th>
-    <th>Nitrogen Dioxide</th>
-    <th>Ozone</th>
-    <th>Sulphur Dioxide</th>
-    <th>PM 2.5</th>
-    <th>PM 10</th>
-    <th>Ammonia</th>
-  </tr>
-  <tr>
-    <td id="aqi_big">-</td> <td id="co">0.0 μg/m3</td>
-    <td id="no">0.0 μg/m3</td>
-    <td id="no2">0.0 μg/m3</td>
-    <td id="o3">0.0 μg/m3</td>
-    <td id="so2">0.0 μg/m3</td>
-    <td id="pm2_5">0.0 μg/m3</td>
-    <td id="pm10">0.0 μg/m3</td>
-    <td id="nh3">0.0 μg/m3</td>
-  </tr>
-</table>
+  <table class="big">
+    <tr>
+      <th data-i18n="aqi">AQI</th>
+      <th data-i18n="carbon_monoxide">Carbon Monoxide</th>
+      <th data-i18n="nitrogen_monoxide">Nitrogen Monoxide</th>
+      <th data-i18n="nitrogen_dioxide">Nitrogen Dioxide</th>
+      <th data-i18n="ozone">Ozone</th>
+      <th data-i18n="sulphur_dioxide">Sulphur Dioxide</th>
+      <th data-i18n="pm25">PM 2.5</th>
+      <th data-i18n="pm10">PM 10</th>
+      <th data-i18n="ammonia">Ammonia</th>
+    </tr>
+    <tr>
+      <td id="aqi_big">-</td>
+      <td id="co">0.0 μg/m3</td>
+      <td id="no">0.0 μg/m3</td>
+      <td id="no2">0.0 μg/m3</td>
+      <td id="o3">0.0 μg/m3</td>
+      <td id="so2">0.0 μg/m3</td>
+      <td id="pm2_5">0.0 μg/m3</td>
+      <td id="pm10">0.0 μg/m3</td>
+      <td id="nh3">0.0 μg/m3</td>
+    </tr>
+  </table>
 
   <!-- Air Pollution Table (Small) -->
   <table class="small">
-    <tr><th>AQI</th><td id="aqi1">-</td></tr>
-    <tr><th>Carbon Monoxide</th><td id="co1">0.0 μg/m3</td></tr>
-    <tr><th>Nitrogen Monoxide</th><td id="no1">0.0 μg/m3</td></tr>
-    <tr><th>Nitrogen Dioxide</th><td id="no21">0.0 μg/m3</td></tr>
-    <tr><th>Ozone</th><td id="o31">0.0 μg/m3</td></tr>
-    <tr><th>Sulphur Dioxide</th><td id="so21">0.0 μg/m3</td></tr>
-    <tr><th>PM 2.5</th><td id="pm2_51">0.0 μg/m3</td></tr>
-    <tr><th>PM 10</th><td id="pm101">0.0 μg/m3</td></tr>
-    <tr><th>Ammonia</th><td id="nh31">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="aqi">AQI</th><td id="aqi1">-</td></tr>
+    <tr><th data-i18n="carbon_monoxide">Carbon Monoxide</th><td id="co1">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="nitrogen_monoxide">Nitrogen Monoxide</th><td id="no1">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="nitrogen_dioxide">Nitrogen Dioxide</th><td id="no21">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="ozone">Ozone</th><td id="o31">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="sulphur_dioxide">Sulphur Dioxide</th><td id="so21">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="pm25">PM 2.5</th><td id="pm2_51">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="pm10">PM 10</th><td id="pm101">0.0 μg/m3</td></tr>
+    <tr><th data-i18n="ammonia">Ammonia</th><td id="nh31">0.0 μg/m3</td></tr>
   </table>
 
   <div id="forecast-section" style="display: none;">
-        <h2>7-Day Temperature Trend</h2>
-        <canvas id="tempLineChart" width="800" height="400"></canvas>
+    <h2 data-i18n="temp_trend">7-Day Temperature Trend</h2>
+    <canvas id="tempLineChart" width="800" height="400"></canvas>
   </div>
 
-  <button id="shareBtn" style="display: none;">📤 Share This</button>
+  <button id="shareBtn" style="display: none;" data-i18n="share_button">📤 Share This</button>
 
   <!-- Footer -->
   <footer>
     <div class="logo-name">
-      <h2>{Weather-Blast}</h2>
-      <p>Know the weather. Breathe better. Plan smarter.</p>
+      <h2 data-i18n="header_title">{Weather-Blast}</h2>
+      <p data-i18n="footer_tagline">Know the weather. Breathe better. Plan smarter.</p>
     </div>
     <div class="contact-sm">
-      <p>Contact Us:</p>
+      <p data-i18n="contact_us">Contact Us:</p>
       <div class="links">
         <a href="#"><img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40" /></a>
         <a href="#"><img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40" /></a>
@@ -189,11 +193,12 @@
       </div>
     </div>
     <div class="copywright">
-      <p>© 2025 Weather-Blast. All rights reserved.</p>
-      <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
+      <p data-i18n="copyright">© 2025 Weather-Blast. All rights reserved.</p>
+      <p data-i18n="developed_by">Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
     </div>
   </footer>
 
+  <script src="translations.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
