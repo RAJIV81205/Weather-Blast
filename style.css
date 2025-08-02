@@ -15,6 +15,7 @@ body {
     flex-direction: column;
     align-items: center;
     color: black;
+    font-family: "Khula", sans-serif;
 }
 
 header {
@@ -90,7 +91,6 @@ h1 {
     align-items: center;
     -webkit-text-stroke-color: black;
     -webkit-text-stroke-width: 1px;
-
 }
 
 h2 {
@@ -295,10 +295,6 @@ td {
         height: 300px;
     }
 
-
-
-
-
 }
 
 @media screen and (max-width:850px) {
@@ -327,8 +323,6 @@ td {
 
 
 }
-
-
 
 #suggestion-box {
     position: absolute;
@@ -473,78 +467,6 @@ input:checked + .slider:before {
 #backToTopBtn:hover {
   background-color: #5e9688;
   transform: scale(1.1);
-}
-
-/* Footer Styling */
-footer {
-    background-color: rgba(106, 156, 137, 0.7);
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
-    padding-bottom: 10px;
-    border-top: 2px solid rgba(22, 66, 60, 1);
-}
-
-@media (max-width: 768px) {
-  footer {
-    grid-template-columns: 1fr;
-  }
-}
-
-.logo-name {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: "Fira Code", monospace;
-    font-optical-sizing: auto;
-    color: rgba(22, 66, 60, 1);
-    font-size: 1.2rem;
-    font-weight: 400;
-    font-style: normal;
-    -webkit-text-stroke-color: black;
-    -webkit-text-stroke-width: 1px;
-}
-.logo-name p {
-    padding-top: 0.5rem;
-}
-
-.contact-sm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    font-family: "Fira Code", monospace;
-    font-optical-sizing: auto;
-    color: rgba(22, 66, 60, 1);
-    font-size: 1.2rem;
-    font-weight: 400;
-    font-style: normal;
-    -webkit-text-stroke-width: 1px;
-    padding-top: 1rem;
-}
-
-.links :hover {
-    transition: all 1s ease;
-    transform: scale(1.1);
-}
-
-.copywright {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: "Fira Code", monospace;
-    font-optical-sizing: auto;
-    color: rgba(22, 66, 60, 1);
-    font-size: 1rem;
-    font-weight: bold;
-    font-style: normal;
-    -webkit-text-stroke-color: black;
-    padding-bottom: 0.8rem;
-    flex-direction: column;
-    padding-top: 0.3rem;
 }
 
 #locate{
@@ -769,3 +691,73 @@ footer {
     cursor: pointer;
     color: #a00;
 }
+
+/* Footer improve */
+/* footer improvement */
+footer {
+  background-color: rgba(106, 156, 137, 0.9);
+  height: 100%;
+  width: 100%;
+  padding: 30px 20px;
+  border-top: 2px solid rgba(22, 66, 60, 1);
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 60px;
+  font-family: 'Khula', sans-serif;
+}
+
+footer > div {
+  flex: 1;
+  min-width: 250px;
+  text-align: center;
+}
+
+/* Logo and Tagline */
+.logo-name h2 {
+  font-family: 'Khula', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: #0e2e2e;
+  margin-bottom: 10px;
+}
+
+.logo-name p {
+  font-family: 'Khula', sans-serif;
+  font-size: 1.1rem;
+  color: #1c3c3c;
+}
+
+/* Contact Us Section */
+.contact-sm p {
+  margin-bottom: 10px;
+  font-family: 'Khula', sans-serif;
+  font-weight: 600;
+  color: rgba(22, 66, 60, 1);
+  font-size: 1.2rem;
+}
+
+.links a img {
+  margin: 0 8px;
+  transition: transform 0.3s ease;
+}
+
+.links a img:hover {
+  transform: scale(1.15);
+}
+
+/* Copyright */
+.copywright p {
+  font-size: 0.95rem;
+  font-family: 'Khula', sans-serif;
+  color: rgba(22, 66, 60, 1);
+  margin: 4px 0;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
+
+
