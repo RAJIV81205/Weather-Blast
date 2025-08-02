@@ -5,6 +5,7 @@ const opt = { timeStyle: 'short', hour12: true }; // Time formatting options
 
 let map; // Global map object
 let isUserSearch = false; // For auto scrolling
+let lastForecastData = null; // Store forecast data for unit toggle
 
 // === Check Toggle State ===
 function isFahrenheitToggled() {
@@ -12,20 +13,25 @@ function isFahrenheitToggled() {
     return toggle && toggle.checked;
 }
 
-// === INITIALIZE DEFAULT MAP ===
+// === INITIALIZE MAP (No default location) ===
+// CHANGED: Removed default coordinates and initialization on load
 function initMap() {
-    map = new mappls.Map("map", {
-        center: [28.6138954, 77.2090057] // Default to New Delhi
-    });
+    map = new mappls.Map("map", {}); // Initialize map without center
 }
-window.onload = initMap;
 
 // === RE-CENTER MAP TO SPECIFIC LOCATION ===
 function initMap1(data) {
     const latitude = data.coord.lat;
     const longitude = data.coord.lon;
 
-    map.setCenter({ lat: latitude, lng: longitude });
+    // CHANGED: Initialize map if not already initialized
+    if (!map) {
+        map = new mappls.Map("map", {
+            center: { lat: latitude, lng: longitude }
+        });
+    } else {
+        map.setCenter({ lat: latitude, lng: longitude });
+    }
 
     if (window.currentMarker) {
         window.currentMarker.remove();
@@ -37,10 +43,10 @@ function initMap1(data) {
         title: "Selected Location"
     });
 
-    // Save reference to current marker globally
     window.currentMarker = marker;
 }
-// scrollable page 
+
+// === SCROLL TO WEATHER INFO ===
 function scrollToWeatherInfo() {
     const weatherSection = document.getElementById("weat");
     if (weatherSection) {
@@ -69,11 +75,10 @@ function getSuggestion(input) {
                 address: feature.properties.address_line1,
                 state: feature.properties.state,
                 country: feature.properties.country,
-
             }));
             updateSuggestions(suggestions);
         })
-        .catch(err => console.log('error', err));
+        .catch(err => console.log('Error fetching suggestions:', err));
 }
 
 // === POPULATE AUTOCOMPLETE SUGGESTIONS ===
@@ -87,25 +92,26 @@ function updateSuggestions(suggestions) {
                 document.getElementById("city-input").value = `${suggestion.address}, ${suggestion.state}`;
                 suggestionBox.style.display = "none";
             };
+            el.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById("city-input").value = `${suggestion.address}, ${suggestion.state}`;
+                    suggestionBox.style.display = "none";
+                    getWeatherByCity();
+                }
+            };
         }
     });
 }
 
 // === FETCH WEATHER FOR CITY ===
 function getWeatherByCity() {
-    const cityInput = document.getElementById("city-input");
-    const city = cityInput.value.trim();
-    const validationMsg = document.getElementById("validationMsg");
-
+    const city = document.getElementById("city-input").value;
     if (!city) {
-        validationMsg.textContent = "Oops! Empty Input ";
-        validationMsg.classList.remove("hidden");
-        cityInput.focus();
+        showError('error-message', 'Please enter a city name');
         return;
     }
-
-    validationMsg.classList.add("hidden");
     isUserSearch = true;
+    showLoading(true);
     fetchWeatherByCity(city);
 }
 
@@ -113,14 +119,18 @@ function getWeatherByCity() {
 function getWeatherByLocation() {
     if (navigator.geolocation) {
         isUserSearch = true;
+        showLoading(true);
         navigator.geolocation.getCurrentPosition(pos => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             fetchWeatherByCoordinates(lat, lon);
             initMap1({ coord: { lat, lon } });
-        }, () => alert("Unable to retrieve your location."));
+        }, () => {
+            showError('error-message', 'Unable to retrieve your location.');
+            showLoading(false);
+        });
     } else {
-        alert("Geolocation is not supported by this browser.");
+        showError('error-message', 'Geolocation is not supported by this browser.');
     }
 }
 
@@ -132,15 +142,16 @@ function fetchWeatherByCity(city) {
             if (!res.ok) throw new Error('City not found');
             return res.json();
         })
-        .then(data => displayWeather(data))
+        .then(data => {
+            displayWeather(data);
+            fetchNearbyCities(data.coord.lat, data.coord.lon, city);
+            showLoading(false);
+        })
         .catch(err => {
             console.error(err);
             fetchLatLon(city);
         });
 }
-
-
-
 
 // === GET LAT/LON FROM CITY NAME ===
 function fetchLatLon(city) {
@@ -155,7 +166,8 @@ function fetchLatLon(city) {
         })
         .catch(err => {
             console.error(err);
-            alert("Invalid location. Try again.");
+            showError('error-message', 'Invalid location. Try again.');
+            showLoading(false);
         });
 }
 
@@ -166,12 +178,16 @@ function fetchWeatherByCoordinates(lat, lon) {
         .then(res => res.json())
         .then(data => {
             displayWeather(data);
-            initMap1(data);
+            fetchNearbyCities(lat, lon, data.name);
+            showLoading(false);
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error(err);
+            showError('error-message', 'Failed to fetch weather data.');
+            showLoading(false);
+        });
 }
 
-// === DISPLAY WEATHER DETAILS IN UI ===
 // === DISPLAY WEATHER DETAILS IN UI ===
 function displayWeather(data) {
     const { temp, feels_like, humidity, pressure } = data.main;
@@ -191,7 +207,7 @@ function displayWeather(data) {
     getWeatherForecast(lat, lon);
 
     // Titles
-    document.getElementById("weat").innerText = `Weather Information : ${city}`;
+    document.getElementById("weat").innerText = `Weather Information: ${city}`;
 
     // Store Celsius in dataset
     ["temp", "fl", "temp1", "fl1"].forEach(id => {
@@ -202,72 +218,141 @@ function displayWeather(data) {
     const isCelsius = !isFahrenheitToggled();
     updateTemperatureDisplay(isCelsius);
 
-    // --- Weather data for BIG TABLE and SMALL TABLE ---
-
-    // City
-    document.getElementById("city1").innerText = city; // Corrected for Big Table
+    // Weather data for BIG TABLE and SMALL TABLE
+    document.getElementById("city1").innerText = city;
     document.getElementById("city1_small").innerText = city;
-
-    // Date
-    document.getElementById("date1").innerText = date; // Corrected for Big Table
+    document.getElementById("date1").innerText = date;
     document.getElementById("date1_small").innerText = date;
-
-    // Weather Info (Description)
     document.getElementById("wi").innerText = weatherdes;
     document.getElementById("wi1").innerText = weatherdes;
-
-    // Humidity
     document.getElementById("humi").innerText = `${humidity}%`;
     document.getElementById("humi1").innerText = `${humidity}%`;
-
-    // Pressure
     document.getElementById("press").innerText = `${pressure} hPa`;
     document.getElementById("press1").innerText = `${pressure} hPa`;
-
-    // Visibility
     document.getElementById("visi").innerText = `${visibility} Km`;
     document.getElementById("visi1").innerText = `${visibility} Km`;
-
-    // Wind Speed
     document.getElementById("ws").innerText = `${windSpeed} m/s ${windArrow}`;
     document.getElementById("ws1").innerText = `${windSpeed} m/s ${windArrow}`;
-
-    // Sunrise
     document.getElementById("sr").innerText = sunrise;
     document.getElementById("sr1").innerText = sunrise;
-
-    // Sunset
     document.getElementById("ss").innerText = sunset;
     document.getElementById("ss1").innerText = sunset;
-
-    // Country Code
     document.getElementById("cc").innerText = country;
     document.getElementById("cc1").innerText = country;
 
     document.getElementById("city-input").value = '';
+    updateRecentSearches(city);
     if (isUserSearch) {
-    scrollToWeatherInfo();
-    isUserSearch = false; // reset
+        scrollToWeatherInfo();
+        isUserSearch = false;
+    }
 }
 
-}
-window.addEventListener('beforeunload', function () {
-    window.scrollTo(0, 0);
-});
-// Add an initial weather fetch when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-    // Existing theme loading logic
-    cindow.scrollTo(0, 0);
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-        toggle = 1;
-        changedisplay();
-    } else if (savedTheme === "light") {
-        toggle = 0;
-        changedisplay();
+// === FETCH NEARBY CITIES ===
+async function fetchNearbyCities(lat, lon, currentCity) {
+    showLoading(true, 'nearby-loading');
+    const url = `https://api.geoapify.com/v2/places?categories=populated_place.city&filter=circle:${lon},${lat},50000&limit=5&apiKey=${geoAPI}`;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch nearby cities');
+        const data = await res.json();
+        const cities = data.features
+            .map(feature => ({
+                name: feature.properties.city || feature.properties.name,
+                lat: feature.properties.lat,
+                lon: feature.properties.lon
+            }))
+            .filter(city => city.name && city.name.toLowerCase() !== currentCity.toLowerCase())
+            .slice(0, 4); // Limit to 4 cities, excluding current city
+        if (cities.length === 0) {
+            showError('nearby-error', 'No nearby cities found.');
+            return;
+        }
+        fetchNearbyCitiesData(cities, currentCity);
+    } catch (err) {
+        console.error('Error fetching nearby cities:', err);
+        showError('nearby-error', 'Failed to load nearby cities.');
+        showLoading(false, 'nearby-loading');
     }
-    fetchWeatherByCity("Kolkata");
-});
+}
+
+// === FETCH WEATHER AND AQI FOR NEARBY CITIES ===
+async function fetchNearbyCitiesData(cities, currentCity) {
+    const isCelsius = !isFahrenheitToggled();
+    const container = document.querySelector('.nearby-cities-container');
+    container.innerHTML = '';
+    container.classList.remove('cities-2', 'cities-3', 'cities-4');
+    container.classList.add(`cities-${cities.length}`); // Add dynamic class based on number of cities
+    
+    for (const city of cities) {
+        try {
+            const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=metric`;
+            const pollutionUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+            
+            const [weatherRes, pollutionRes] = await Promise.all([
+                fetch(weatherUrl).then(res => res.json()),
+                fetch(pollutionUrl).then(res => res.json())
+            ]);
+
+            const temp = weatherRes.main.temp;
+            const icon = weatherRes.weather[0].icon;
+            const aqi = pollutionRes.list[0].main.aqi;
+            const aqiLabel = ["Good", "Fair", "Moderate", "Poor", "Very Poor"][aqi - 1] || "Unknown";
+            const isCurrentCity = city.name.toLowerCase() === currentCity.toLowerCase();
+
+            const card = document.createElement('div');
+            card.className = `nearby-city-card aqi-${aqi} ${isCurrentCity ? 'current-city' : ''}`;
+            card.tabIndex = 0;
+            card.setAttribute('aria-label', `Weather for ${city.name}: ${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)} ${isCelsius ? '°C' : '°F'}, AQI ${aqiLabel}`);
+            card.innerHTML = `
+                <h3>${city.name}${isCurrentCity ? ' (Current)' : ''}</h3>
+                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${weatherRes.weather[0].description}">
+                <p>Temperature: <span class="nearby-temp" data-celsius="${temp}">${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)}${isCelsius ? '°C' : '°F'}</span></p>
+                <p class="aqi-value" data-tooltip="AQI ${aqiLabel}: ${getAQIDescription(aqi)}">AQI: ${aqiLabel} (${aqi})</p>
+            `;
+            card.onclick = () => {
+                document.getElementById('city-input').value = city.name;
+                getWeatherByCity();
+            };
+            card.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('city-input').value = city.name;
+                    getWeatherByCity();
+                }
+            };
+            container.appendChild(card);
+        } catch (err) {
+            console.error(`Error fetching data for ${city.name}:`, err);
+        }
+    }
+    showLoading(false, 'nearby-loading');
+}
+
+// === AQI DESCRIPTION FOR TOOLTIPS ===
+function getAQIDescription(aqi) {
+    switch (aqi) {
+        case 1: return "Air quality is good. No health risk.";
+        case 2: return "Air quality is fair. Sensitive people should take precautions.";
+        case 3: return "Moderate risk for sensitive groups. Limit prolonged outdoor exertion.";
+        case 4: return "Poor air quality. General public may experience discomfort.";
+        case 5: return "Very poor. Avoid outdoor activities if possible.";
+        default: return "Air quality data unavailable.";
+    }
+}
+
+// === LOADING AND ERROR HANDLING ===
+function showLoading(show, elementId = 'loading') {
+    document.getElementById(elementId).style.display = show ? 'flex' : 'none';
+}
+
+function showError(elementId, message) {
+    const errorEl = document.getElementById(elementId);
+    errorEl.innerText = message;
+    errorEl.style.display = 'block';
+    setTimeout(() => {
+        errorEl.style.display = 'none';
+    }, 5000);
+}
 
 // === CONVERSION HELPERS ===
 function celsiusToFahrenheit(c) { return (c * 9 / 5) + 32; }
@@ -286,22 +371,29 @@ function updateTemperatureDisplay(isCelsius) {
             el.innerText = `${f.toFixed(1)}°F`;
         }
     });
+
+    // Update nearby cities temperatures
+    document.querySelectorAll('.nearby-temp').forEach(el => {
+        const c = parseFloat(el.dataset.celsius);
+        el.innerText = isCelsius ? `${c.toFixed(1)}°C` : `${celsiusToFahrenheit(c).toFixed(1)}°F`;
+    });
 }
+
 // === FETCH POLLUTION DATA ===
 function fetchPollution(lat, lon) { 
     const pollurl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
     fetch(pollurl)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             displayPollution(data);
         })
         .catch(error => {
-            console.error('Error fetching pollution info', error);
+            console.error('Error fetching pollution info:', error);
+            showError('error-message', 'Failed to load air pollution data.');
         });
 }
 
-// Display pollution data
+// === DISPLAY POLLUTION DATA ===
 function displayPollution(data) {
     const aqi = data.list[0].main.aqi;
     const components = data.list[0].components;
@@ -310,41 +402,11 @@ function displayPollution(data) {
     const label = aqiLabel[aqi - 1] || "Unknown";
     document.getElementById("aqi").innerText = label;
     document.getElementById("aqi1").innerText = label;
+    document.getElementById("aqi_big").innerText = label;
 
-    const aqiBigElement = document.getElementById("aqi_big");
-    if (aqiBigElement) { // Always good to check if element exists before setting innerText
-        aqiBigElement.innerText = label;
-    }
+    const healthMessage = getAQIDescription(aqi);
+    document.getElementById("aqi-message").innerText = healthMessage;
 
-    // ✅ Health suggestion based on AQI
-    let healthMessage = "";
-    switch (aqi) {
-        case 1:
-            healthMessage = "Air quality is good. No health risk.";
-            break;
-        case 2:
-            healthMessage = "Air quality is fair. Sensitive people should take precautions.";
-            break;
-        case 3:
-            healthMessage = "Moderate risk for sensitive groups. Limit prolonged outdoor exertion.";
-            break;
-        case 4:
-            healthMessage = "Poor air quality. General public may experience discomfort.";
-            break;
-        case 5:
-            healthMessage = "Very poor. Avoid outdoor activities if possible.";
-            break;
-        default:
-            healthMessage = "Air quality data unavailable.";
-    }
-
-    // Insert this message into the DOM (You must add a tag with id="aqi-message" in HTML)
-    const messageElement = document.getElementById("aqi-message");
-    if (messageElement) {
-        messageElement.innerText = healthMessage;
-    }
-
-    // Existing pollutant values
     const pollutionMetrics = ["co", "no", "no2", "o3", "so2", "pm2_5", "pm10", "nh3"];
     pollutionMetrics.forEach(metric => {
         const value = components[metric];
@@ -354,24 +416,25 @@ function displayPollution(data) {
     });
 }
 
-
-// Forecast display with °C ⇄ °F toggle support
+// === FORECAST DISPLAY ===
 function getWeatherForecast(lat, lon) {
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            lastForecastData = data;
             showWeatherForecast(data);
         })
         .catch(error => {
-            console.error('Error fetching Forecast', error);
+            console.error('Error fetching forecast:', error);
+            showError('error-message', 'Failed to load weather forecast.');
         });
 }
 
 function convertTemp(temp, isCelsius) {
     return isCelsius ? `${temp.toFixed(1)} °C` : `${((temp * 9/5) + 32).toFixed(1)} °F`;
 }
-//Adding an object for notes 
+
+// === WEATHER NOTES ===
 const notes = {
     clear: ["Sun’s out, shades on! Don’t forget sunscreen 😎", "Perfect day for an ice cream or a long walk 🍦🚶‍♀️", "Clear skies and good vibes ahead 🌞✨"],
     clouds: ["Clouds are having a meeting up there! ☁️", "Still a great day to be outdoors — maybe a light jacket?", "Sky's wearing a gray sweater today! 🌫️"],
@@ -379,36 +442,33 @@ const notes = {
     snow: ["Snowball fights or hot cocoa? Or both? ☕❄️", "Snowflakes are saying hello! ❄️👋", "Winter wonderland loading... ⛄❄️"],
     thunderstorm: ["⚡ Dramatic skies incoming! Stay safe and unplug if needed.", "A good day to stay in and watch the show from your window 🎭", "It's Thor's bowling night! ⚡🎳"],
     atmosphere: ["Dreamy, soft-focus day! 🌫️✨", "It’s one of those days… where the air's got secrets. Stay curious, stay indoors if needed! 🔮🌪️", "Atmospheric trickery afoot! The skies are casting illusions — step carefully, seer of weather 👁️‍🗨️🌫️"]
-}
+};
 
-//categories grouping together weather desc 
 const weatherKeywords = {
     clear: ['clear', 'sunny'], clouds: ['cloud', 'overcast'], rain: ['rain', 'drizzle', 'shower'], snow: ["snow", "sleet"], thunderstorm: ['thunderstorm', 'thunder'], atmosphere: ['mist', 'fog', 'haze', 'smoke', 'dust', 'sand', 'tornado']
-}
+};
 
-//assign category to weather desc info
-function extractWeatherInfo(weatherMain = ''){
+function extractWeatherInfo(weatherMain = '') {
     const main = weatherMain.toLowerCase();
-    for(const [category, keywords] of Object.entries(weatherKeywords)){
-        if(keywords.some(keyword=>main.includes(keyword))){
+    for (const [category, keywords] of Object.entries(weatherKeywords)) {
+        if (keywords.some(keyword => main.includes(keyword))) {
             return category;
         }
     }
     return 'clear';
 }
 
-//function to give note randomly
-function giveNotes(weatherMain = ''){
+function giveNotes(weatherMain = '') {
     const category = extractWeatherInfo(weatherMain);
     const note = notes[category];
-
-    const randomIdx = Math.floor(Math.random()*note.length);
+    const randomIdx = Math.floor(Math.random() * note.length);
     return note[randomIdx];
 }
 
+// === SHOW WEATHER FORECAST ===
 function showWeatherForecast(data) {
     const isCelsius = !document.getElementById('unitToggle').checked;
-     if (data.alerts && data.alerts.length > 0) {
+    if (data.alerts && data.alerts.length > 0) {
         displayWeatherAlerts(data.alerts);
     } else {
         hideWeatherAlerts();
@@ -422,8 +482,8 @@ function showWeatherForecast(data) {
     const sunrises = forecast.map(day => `<td>${new Date(day.sunrise * 1000).toLocaleTimeString('en-US', opt)}</td>`).join("");
     const sunsets = forecast.map(day => `<td>${new Date(day.sunset * 1000).toLocaleTimeString('en-US', opt)}</td>`).join("");
     const summaries = forecast.map(day => `<td>${day.weather[0].description}</td>`).join("");
-    const icons = forecast.map(day => `<td class = "icons-block"><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
-    const noteForUser = forecast.map(day => `<td class = "notes"><p class="notes-txt">${giveNotes(day.weather[0].main)}</p></td>`).join("");
+    const icons = forecast.map(day => `<td class="icons-block"><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
+    const noteForUser = forecast.map(day => `<td class="notes"><p class="notes-txt">${giveNotes(day.weather[0].main)}</p></td>`).join("");
 
     document.getElementById("forecast").style.display = "block";
     document.getElementById("forecast-section").style.display = "block";
@@ -452,26 +512,26 @@ function showWeatherForecast(data) {
     }
 
     function displayWeatherAlerts(alerts) {
-    const alertBox = document.getElementById("weather-alert-box");
-    alertBox.innerHTML = ''; // Clear previous alerts
+        const alertBox = document.getElementById("weather-alert-box");
+        alertBox.innerHTML = '';
 
-    alerts.forEach(alert => {
-        const alertEl = document.createElement("div");
-        alertEl.className = "alert-card";
-        alertEl.innerHTML = `
-            <div class="alert-header">
-                ⚠️ ${alert.event}
-                <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'">×</button>
-            </div>
-            <div class="alert-body">
-                <p><strong>From:</strong> ${new Date(alert.start * 1000).toLocaleString()}</p>
-                <p><strong>To:</strong> ${new Date(alert.end * 1000).toLocaleString()}</p>
-                <p><strong>Description:</strong><br>${alert.description.replace(/\n/g, '<br>')}</p>
-                <p><strong>Source:</strong> ${alert.sender_name}</p>
-            </div>
-        `;
-        alertBox.appendChild(alertEl);
-    });
+        alerts.forEach(alert => {
+            const alertEl = document.createElement("div");
+            alertEl.className = "alert-card";
+            alertEl.innerHTML = `
+                <div class="alert-header">
+                    ⚠️ ${alert.event}
+                    <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'" aria-label="Close alert">×</button>
+                </div>
+                <div class="alert-body">
+                    <p><strong>From:</strong> ${new Date(alert.start * 1000).toLocaleString()}</p>
+                    <p><strong>To:</strong> ${new Date(alert.end * 1000).toLocaleString()}</p>
+                    <p><strong>Description:</strong><br>${alert.description.replace(/\n/g, '<br>')}</p>
+                    <p><strong>Source:</strong> ${alert.sender_name}</p>
+                </div>
+            `;
+            alertBox.appendChild(alertEl);
+        });
 
         alertBox.style.display = "block";
     }
@@ -480,16 +540,13 @@ function showWeatherForecast(data) {
         const alertBox = document.getElementById("weather-alert-box");
         alertBox.innerHTML = "";
         alertBox.style.display = "none";
-}
+    }
     
-  
     const ctx = document.getElementById('tempLineChart').getContext('2d');
-
     const chartLabels = forecast.map(day => new Date(day.dt * 1000).toLocaleDateString());
     const maxTempValues = forecast.map(day => isCelsius ? day.temp.max : (day.temp.max * 9/5 + 32));
     const minTempValues = forecast.map(day => isCelsius ? day.temp.min : (day.temp.min * 9/5 + 32));
 
-    // Destroy previous chart if it exists
     if (window.tempChart) {
         window.tempChart.destroy();
     }
@@ -551,16 +608,13 @@ function showWeatherForecast(data) {
             }
         }
     });
-
-
 }
 
-// Dark-mode toggle
+// === DARK MODE TOGGLE ===
 const darkbtn = document.getElementById('dark-mode');
 let toggle = 1;
 function changedisplay() {
     if (toggle == 1) {
-        // dark mode styling
         document.querySelector('body').style.backgroundColor = "rgba(17, 34, 29, 0.7)";
         document.querySelector('body').style.color = "rgb(233, 239, 236)";
         darkbtn.textContent = "🌙";
@@ -571,16 +625,23 @@ function changedisplay() {
         document.querySelector('.forecasttable')?.querySelectorAll('th').forEach(et => {
             et.style.color = "rgba(17, 34, 29, 0.7)";
         });
+        document.querySelectorAll('.nearby-city-card').forEach(card => {
+            card.style.color = "rgb(233, 239, 236)";
+            card.style.border = "1px solid rgb(233, 239, 236)";
+        });
         localStorage.setItem("theme", "dark"); 
         toggle = 0;
     } else {
-        // light mode styling
         document.querySelector('body').style.backgroundColor = "rgb(233, 239, 236)";
         document.querySelector('body').style.color = "black";
         darkbtn.textContent = "☀️";
         document.querySelectorAll("table, th, td").forEach(el => {
             el.style.border = "1px solid rgba(22, 66, 60, 1)";
             el.style.color = "rgba(22, 66, 60, 1)";
+        });
+        document.querySelectorAll('.nearby-city-card').forEach(card => {
+            card.style.color = "rgba(22, 66, 60, 1)";
+            card.style.border = "1px solid rgba(22, 66, 60, 1)";
         });
         localStorage.setItem("theme", "light"); 
         toggle = 1;
@@ -589,19 +650,22 @@ function changedisplay() {
 
 darkbtn.addEventListener('click', changedisplay);
 
-// Check for saved theme in localStorage and apply on load
+// === LOAD SAVED THEME ===
 document.addEventListener("DOMContentLoaded", () => {
+    window.scrollTo(0, 0);
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
-        toggle = 1; // important to allow toggling later
+        toggle = 1;
         changedisplay();
     } else if (savedTheme === "light") {
         toggle = 0;
         changedisplay();
     }
+    // CHANGED: Removed fetchWeatherByCity("Kolkata")
+    renderRecentSearches();
 });
 
-// This is for showing wind direction
+// === WIND DIRECTION ===
 function getWindDirectionArrow(deg) {
     if (deg >= 337.5 || deg < 22.5) return '↑ N';
     if (deg >= 22.5 && deg < 67.5) return '↗ NE';
@@ -614,24 +678,7 @@ function getWindDirectionArrow(deg) {
     return '❓';
 }
 
-// Save forecast data globally for reuse
-let lastForecastData = null;
-
-// Wrap fetch to save forecast
-function getWeatherForecast(lat, lon) {
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-            lastForecastData = data;
-            showWeatherForecast(data);
-
-        })
-        .catch(error => {
-            console.error('Error fetching Forecast', error);
-        });
-}
-
-// Temperature unit toggle listener
+// === TEMPERATURE UNIT TOGGLE ===
 const unitToggle = document.getElementById('unitToggle');
 unitToggle.addEventListener('change', function () {
     const isCelsius = !this.checked;
@@ -641,29 +688,29 @@ unitToggle.addEventListener('change', function () {
     }
 });
 
-// Scroll to top button
+// === SCROLL TO TOP ===
 window.onscroll = function () {
-  const btn = document.getElementById("backToTopBtn");
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-    btn.style.display = "flex";
-  } else {
-    btn.style.display = "none";
-  }
+    const btn = document.getElementById("backToTopBtn");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
 };
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
-//added share button
+
+// === SHARE BUTTON ===
 const shareBtn = document.getElementById("shareBtn");
-shareBtn.style.display = "inline-block"; // show the button
+shareBtn.style.display = "inline-block";
 
 shareBtn.onclick = async () => {
-    // Corrected: Use city1 from the main table
     const city = document.getElementById("city1").textContent;
     const temperature = document.getElementById("temp").textContent;
     const description = document.getElementById("wi").textContent;
-    const aqi = document.getElementById("aqi").textContent; // This will get the AQI from the span in pollution-info
+    const aqi = document.getElementById("aqi").textContent;
 
     const shareText = `📍 ${city}\n🌡️ Temp: ${temperature}\n🌤️ ${description}\n🌫️ AQI: ${aqi}\nShared via Weather Blast`;
 
@@ -677,72 +724,63 @@ shareBtn.onclick = async () => {
             console.error("Share failed:", err);
         }
     } else {
-        // Fallback for browsers that don't support Web Share API
         navigator.clipboard.writeText(shareText).then(() => {
             alert("Copied to clipboard!");
         });
     }
 };
 
-
-
-//SHOW RECENT SEARCHES;
+// === RECENT SEARCHES ===
 const searchInput = document.getElementById('city-input');
 const searchBtn = document.querySelector('button[onclick="getWeatherByCity()"]');
 const recentList = document.getElementById('recent-list');
 const resetBtn = document.getElementById('reset-searches-btn');
 
-// Update recent searches in localStorage and re-render list
 function updateRecentSearches(newSearch) {
-  let recent = JSON.parse(localStorage.getItem('recentSearches')) || [];
-  recent = recent.filter(item => item.toLowerCase() !== newSearch.toLowerCase());
-  recent.unshift(newSearch);
-  if (recent.length > 5) recent = recent.slice(0, 5);
-  localStorage.setItem('recentSearches', JSON.stringify(recent));
-  renderRecentSearches();
+    let recent = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    recent = recent.filter(item => item.toLowerCase() !== newSearch.toLowerCase());
+    recent.unshift(newSearch);
+    if (recent.length > 5) recent = recent.slice(0, 5);
+    localStorage.setItem('recentSearches', JSON.stringify(recent));
+    renderRecentSearches();
 }
 
-// Render recent searches as clickable list items
 function renderRecentSearches() {
-  const recent = JSON.parse(localStorage.getItem('recentSearches')) || [];
-  if (recent.length === 0) {
-    recentList.innerHTML = '<li>No recent searches yet.</li>';
-    return;
-  }
-
-  recentList.innerHTML = recent
-    .map(item => `<li class="recent-item" tabindex="0" role="button">${item}</li>`)
-    .join('');
-
-  document.querySelectorAll('.recent-item').forEach(el => {
-    el.onclick = () => {
-      searchInput.value = el.innerText;
-      getWeatherByCity();
-    };
-  });
-}
-
-// On Search button click, update recent searches and fetch weather
-searchBtn.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    const validationMsg = document.getElementById("validationMsg");
-
-    if (!query) {
-        validationMsg.textContent = "Oops! Empty Input";
-        validationMsg.classList.remove("hidden");
-        searchInput.focus();
+    const recent = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    if (recent.length === 0) {
+        recentList.innerHTML = '<li>No recent searches yet.</li>';
         return;
     }
 
-    validationMsg.classList.add("hidden");
+    recentList.innerHTML = recent
+        .map(item => `<li class="recent-item" tabindex="0" role="button" aria-label="Search weather for ${item}">${item}</li>`)
+        .join('');
+
+    document.querySelectorAll('.recent-item').forEach(el => {
+        el.onclick = () => {
+            searchInput.value = el.innerText;
+            getWeatherByCity();
+        };
+        el.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                searchInput.value = el.innerText;
+                getWeatherByCity();
+            }
+        };
+    });
+}
+
+searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (!query) {
+        showError('error-message', 'Please enter a city name');
+        return;
+    }
     updateRecentSearches(query);
 });
 
-// Reset recent searches and update display
+// CHANGED: Remove window.onload to prevent default map initialization
 resetBtn.addEventListener('click', () => {
-  localStorage.removeItem('recentSearches');
-  renderRecentSearches();
+    localStorage.removeItem('recentSearches');
+    renderRecentSearches();
 });
-
-// Render recent searches on page load
-window.addEventListener('DOMContentLoaded', renderRecentSearches);
