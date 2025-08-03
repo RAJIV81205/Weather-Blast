@@ -1,0 +1,475 @@
+/* Enhanced Favorites Page CSS with Modern Design and Dark Mode Support */
+
+#favorites-section {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(248, 250, 252, 0.95) 50%, 
+        rgba(243, 244, 246, 0.9) 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(22, 66, 60, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+#favorites-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 40%, 
+        rgba(106, 156, 137, 0.03) 50%, 
+        transparent 60%);
+    animation: shimmer 8s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+}
+
+#favorites-section h2 {
+    color: rgba(22, 66, 60, 1);
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#favorites-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        rgba(106, 156, 137, 0.8), 
+        rgba(106, 156, 137, 0.4));
+    border-radius: 2px;
+    animation: underlineGlow 3s infinite alternate;
+}
+
+@keyframes underlineGlow {
+    0% { box-shadow: 0 0 5px rgba(106, 156, 137, 0.3); }
+    100% { box-shadow: 0 0 15px rgba(106, 156, 137, 0.6); }
+}
+
+.favorites-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.add-favorite {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(252, 252, 252, 0.8) 100%);
+    border: 2px solid rgba(106, 156, 137, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.add-favorite:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(106, 156, 137, 0.4);
+}
+
+#favorite-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid rgba(106, 156, 137, 0.2);
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: rgba(22, 66, 60, 1);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(249, 250, 251, 0.8) 100%);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#favorite-input:focus {
+    outline: none;
+    border-color: rgba(106, 156, 137, 0.6);
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.05),
+        0 0 0 3px rgba(106, 156, 137, 0.1);
+    transform: scale(1.02);
+}
+
+#favorite-input::placeholder {
+    color: rgba(108, 117, 125, 0.7);
+    font-style: italic;
+}
+
+.add-favorite button {
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 0.9) 0%, 
+        rgba(106, 156, 137, 1) 100%);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        0 5px 15px rgba(106, 156, 137, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-favorite button:hover {
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 1) 0%, 
+        rgba(91, 141, 122, 1) 100%);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(106, 156, 137, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.add-favorite button:active {
+    transform: translateY(0) scale(1.02);
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorite-item {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(248, 250, 252, 0.9) 100%);
+    border: 2px solid rgba(106, 156, 137, 0.15);
+    border-radius: 18px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.favorite-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(106, 156, 137, 0.1), 
+        transparent);
+    transition: left 0.5s ease;
+}
+
+.favorite-item:hover::before {
+    left: 100%;
+}
+
+.favorite-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(106, 156, 137, 0.3);
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.favorite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.favorite-location {
+    color: rgba(22, 66, 60, 1);
+    font-size: 1.4em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favorite-location i {
+    color: rgba(106, 156, 137, 1);
+    padding: 8px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 0.1) 0%, 
+        rgba(106, 156, 137, 0.05) 100%);
+    animation: locationPulse 3s infinite;
+}
+
+@keyframes locationPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.remove-favorite {
+    background: linear-gradient(135deg, 
+        rgba(220, 53, 69, 0.9) 0%, 
+        rgba(220, 53, 69, 1) 100%);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+.remove-favorite:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+.favorite-weather {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.weather-stat {
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 0.08) 0%, 
+        rgba(106, 156, 137, 0.03) 100%);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(106, 156, 137, 0.1);
+    transition: all 0.3s ease;
+}
+
+.weather-stat:hover {
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 0.12) 0%, 
+        rgba(106, 156, 137, 0.06) 100%);
+    transform: scale(1.05);
+}
+
+.stat-value {
+    color: rgba(22, 66, 60, 1);
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+    color: rgba(108, 117, 125, 0.8);
+    font-size: 0.9em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.last-updated {
+    color: rgba(108, 117, 125, 0.7);
+    font-size: 0.85em;
+    text-align: center;
+    font-style: italic;
+    padding: 10px;
+    background: linear-gradient(135deg, 
+        rgba(106, 156, 137, 0.05) 0%, 
+        rgba(106, 156, 137, 0.02) 100%);
+    border-radius: 8px;
+    border: 1px solid rgba(106, 156, 137, 0.08);
+}
+
+.no-favorites {
+    text-align: center;
+    padding: 60px 30px;
+    color: rgba(108, 117, 125, 0.8);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(248, 250, 252, 0.7) 100%);
+    border: 2px dashed rgba(106, 156, 137, 0.3);
+    border-radius: 15px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.no-favorites i {
+    font-size: 4em;
+    color: rgba(106, 156, 137, 0.5);
+    margin-bottom: 20px;
+    animation: gentleBounce 3s infinite;
+}
+
+@keyframes gentleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.no-favorites h3 {
+    color: rgba(22, 66, 60, 1);
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.no-favorites p {
+    margin: 0;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    #favorites-section {
+        padding: 20px;
+        margin: 15px 0;
+    }
+    
+    #favorites-section h2 {
+        font-size: 1.8em;
+    }
+    
+    .add-favorite {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    #favorite-input {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .favorites-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .favorite-item {
+        padding: 20px;
+    }
+    
+    .favorite-location {
+        font-size: 1.2em;
+    }
+    
+    .favorite-weather {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .no-favorites {
+        padding: 40px 20px;
+    }
+}
+
+/* Dark Mode Support */
+body[style*="rgba(17, 34, 29, 0.7)"] #favorites-section {
+    background: linear-gradient(135deg, rgba(17, 34, 29, 0.9), rgba(22, 66, 60, 0.8));
+    border-color: rgba(233, 239, 236, 0.3);
+    color: rgb(233, 239, 236);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] #favorites-section h2 {
+    color: rgb(233, 239, 236);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .add-favorite {
+    background: linear-gradient(135deg, rgba(22, 66, 60, 0.6), rgba(17, 34, 29, 0.8));
+    border-color: rgba(233, 239, 236, 0.3);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] #favorite-input {
+    background: linear-gradient(135deg, rgba(22, 66, 60, 0.4), rgba(17, 34, 29, 0.6));
+    border-color: rgba(233, 239, 236, 0.3);
+    color: rgb(233, 239, 236);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] #favorite-input::placeholder {
+    color: rgba(233, 239, 236, 0.6);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .favorite-item {
+    background: linear-gradient(135deg, rgba(22, 66, 60, 0.6), rgba(17, 34, 29, 0.8));
+    border-color: rgba(233, 239, 236, 0.2);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .favorite-location {
+    color: rgb(233, 239, 236);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .weather-stat {
+    background: linear-gradient(135deg, rgba(106, 156, 137, 0.2), rgba(106, 156, 137, 0.1));
+    border-color: rgba(233, 239, 236, 0.2);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .stat-value {
+    color: rgb(233, 239, 236);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .stat-label {
+    color: rgba(233, 239, 236, 0.7);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .last-updated {
+    background: linear-gradient(135deg, rgba(106, 156, 137, 0.2), rgba(106, 156, 137, 0.1));
+    border-color: rgba(233, 239, 236, 0.2);
+    color: rgba(233, 239, 236, 0.7);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .no-favorites {
+    background: linear-gradient(135deg, rgba(22, 66, 60, 0.4), rgba(17, 34, 29, 0.6));
+    border-color: rgba(233, 239, 236, 0.3);
+    color: rgba(233, 239, 236, 0.8);
+}
+
+body[style*="rgba(17, 34, 29, 0.7)"] .no-favorites h3 {
+    color: rgb(233, 239, 236);
+}

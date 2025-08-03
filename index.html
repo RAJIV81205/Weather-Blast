@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-translate>Weather-Blast</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap" defer async></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/news.css">
+    <link rel="stylesheet" href="css/favorites.css">
+    <link rel="stylesheet" href="css/alert-panel.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <script
+        src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap"
+        defer async></script>
+
+    <!-- Font Awesome CDN -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
 </head>
+<!-- Back to Top Button -->
+<button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+
 <body>
+
   <!-- Back to Top Button -->
   <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top" aria-label="Scroll to top" data-translate-aria="Scroll to top">
     <i class="fas fa-arrow-up"></i>
@@ -208,20 +229,417 @@
       <p data-translate>Know the weather. Breathe better. Plan smarter.</p>
     </div>
 
-    <div class="contact-sm">
-      <p data-translate>Contact Us:</p>
-      <div class="links">
-        <a href="https://github.com/RAJIV81205/Weather-Blast"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40" /></a>
-      </div>
+    <header>
+        <div class="navbar-brand">
+            <h1>{Weather-Blast}</h1>
+        </div>
+        
+        <nav class="navbar">
+            <div class="nav-actions">
+                <div class="nav-links">
+                    <a href="#home" class="nav-link active" onclick="showSection('home')">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#news" class="nav-link" onclick="showSection('news')">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Weather News</span>
+                    </a>
+                    <a href="#favorites" class="nav-link" onclick="showSection('favorites')">
+                        <i class="fas fa-star"></i>
+                        <span>Favorites</span>
+                    </a>
+                    <a href="#alerts" class="nav-link" id="alertsLink" onclick="toggleAlerts()">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Alerts</span>
+                    </a>
+                    <a href="#settings" class="nav-link" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+                <button id="dark-mode">☀️</button>
+            </div>
+        </nav>
+
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Main Content Sections -->
+    <main id="main-content">
+        <!-- Home Section (Original Weather Content) -->
+        <section id="home-section" class="content-section active">
+            <!-- Keep home section empty - original content will be outside sections -->
+        </section>
+
+        <!-- Weather News Section -->
+        <section id="news-section" class="content-section">
+            <h2>Weather News & Natural Disasters</h2>
+            <div class="news-container">
+                <div class="news-grid" id="news-grid">
+                    <div class="news-card">
+                        <h3>Loading weather news...</h3>
+                        <p>Please wait while we fetch the latest weather-related news and alerts.</p>
+                    </div>
+                </div>
+                <div class="news-pagination" id="news-pagination"></div>
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section id="favorites-section" class="content-section">
+            <h2>Favorite Locations</h2>
+            
+            <!-- Statistics Cards -->
+            <div class="favorites-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Favorites</div>
+                    <div class="stat-number" id="total-favorites">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Most Recent Favorite</div>
+                    <div class="stat-number" id="recent-favorite">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Weather Updates</div>
+                    <div class="stat-number" id="weather-updates">--</div>
+                </div>
+            </div>
+            
+            <div class="favorites-container">
+                <div class="add-favorite">
+                    <input type="text" id="favorite-input" placeholder="Add a new favorite location...">
+                    <button onclick="addFavoriteLocation()">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                <div id="favorites-list" class="favorites-list">
+                    <!-- Default favorite removed -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings-section" class="content-section">
+            <h2><i class="fas fa-cog"></i> Settings & Preferences</h2>
+            <div class="settings-container">
+                <div class="settings-group">
+                    <h3>
+                        <i class="fas fa-thermometer-half"></i>
+                        Units & Display
+                    </h3>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="temp-unit-setting">Temperature Unit</label>
+                        </div>
+                        <div class="setting-description">
+                            Choose your preferred temperature scale for weather displays
+                        </div>
+                        <select id="temp-unit-setting" class="setting-select">
+                            <option value="celsius">Celsius (°C)</option>
+                            <option value="fahrenheit">Fahrenheit (°F)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="wind-unit-setting">Wind Speed Unit</label>
+                        </div>
+                        <div class="setting-description">
+                            Select the unit for wind speed measurements
+                        </div>
+                        <select id="wind-unit-setting" class="setting-select">
+                            <option value="ms">Meters per second (m/s)</option>
+                            <option value="kmh">Kilometers per hour (km/h)</option>
+                            <option value="mph">Miles per hour (mph)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="pressure-unit-setting">Pressure Unit</label>
+                        </div>
+                        <div class="setting-description">
+                            Choose atmospheric pressure measurement unit
+                        </div>
+                        <select id="pressure-unit-setting" class="setting-select">
+                            <option value="hpa">Hectopascals (hPa)</option>
+                            <option value="mb">Millibars (mb)</option>
+                            <option value="inhg">Inches of Mercury (inHg)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3>
+                        <i class="fas fa-palette"></i>
+                        Appearance & Theme
+                    </h3>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="theme-setting">Theme</label>
+                        </div>
+                        <div class="setting-description">
+                            Choose your preferred color scheme
+                        </div>
+                        <select id="theme-setting" class="setting-select">
+                            <option value="auto">Auto (System)</option>
+                            <option value="light">Light Mode</option>
+                            <option value="dark">Dark Mode</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="animation-setting">Animations</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="animation-setting" checked>
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        <div class="setting-description">
+                            Enable smooth animations and transitions
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <label for="compact-mode">Compact Mode</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="compact-mode">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        <div class="setting-description">
+                            Use condensed layout for more information density
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Original Home Page Content (Always Visible) -->
+    <div id="original-home-content">
+        <div class="up-container">
+            <div class="card">
+                <p class="first">ENTER YOUR LOCATION</p>
+                <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code"
+                    oninput="autoComplete()">
+                <div id="suggestion-box">
+                    <div id="suggestion-0" class="suggestion"></div>
+                    <div id="suggestion-1" class="suggestion"></div>
+                    <div id="suggestion-2" class="suggestion"></div>
+                    <div id="suggestion-3" class="suggestion"></div>
+                    <div id="suggestion-4" class="suggestion"></div>
+                </div>
+                <button onclick="getWeatherByCity()">Search</button>
+                <p class="or">OR</p>
+                <button onclick="getWeatherByLocation()" id="locate">Use Current Location</button>
+            </div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+
+        <div class="weather-info-header">
+            <h2 id="weat">Weather Information</h2>
+            <div class="unit-toggle-container">
+                <span id="unitLabel">°C ⇄ °F</span>
+                <label class="switch">
+                    <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit">
+                    <!-- Toggle for Celsius/Fahrenheit -->
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Weather Tables -->
+        <table class="big">
+            <tr>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Temperature</th>
+                <th>Feels Like</th>
+                <th>Humidity</th>
+                <th>Pressure</th>
+                <th>Visibility</th>
+                <th>Wind Speed</th>
+                <th>Sunrise</th>
+                <th>Sunset</th>
+                <th>Country Code</th>
+                <th>Weather Info</th>
+            </tr>
+            <tr>
+                <td id="date">DD/MM/YY</td>
+                <td id="city">City</td>
+                <td id="temp" data-celsius="0">0°C</td>
+                <td id="fl" data-celsius="0">0°C</td>
+                <td id="humi">0 %</td>
+                <td id="press">0 atm</td>
+                <td id="visi">0 Km</td>
+                <td id="ws">0 m/s</td>
+                <td id="sr">00:00</td>
+                <td id="ss">00:00</td>
+                <td id="cc">IN</td>
+                <td id="wi">Info</td>
+            </tr>
+        </table>
+
+        <table class="small">
+            <tr>
+                <th>Date</th>
+                <td id="date1">DD/MM/YY</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td id="city1">City</td>
+            </tr>
+            <tr>
+                <th>Temperature</th>
+                <td id="temp1" data-celsius="0">0°C</td>
+            </tr>
+            <tr>
+                <th>Feels Like</th>
+                <td id="fl1" data-celsius="0">0°C</td>
+            </tr>
+            <tr>
+                <th>Humidity</th>
+                <td id="humi1">0 %</td>
+            </tr>
+            <tr>
+                <th>Pressure</th>
+                <td id="press1">0 atm</td>
+            </tr>
+            <tr>
+                <th>Visibility</th>
+                <td id="visi1">0 Km</td>
+            </tr>
+            <tr>
+                <th>Wind Speed</th>
+                <td id="ws1">0 m/s</td>
+            </tr>
+            <tr>
+                <th>Sunrise</th>
+                <td id="sr1">00:00</td>
+            </tr>
+            <tr>
+                <th>Sunset</th>
+                <td id="ss1">00:00</td>
+            </tr>
+            <tr>
+                <th>Country Code</th>
+                <td id="cc1">IN</td>
+            </tr>
+            <tr>
+                <th>Weather Info</th>
+                <td id="wi1">Info</td>
+            </tr>
+        </table>
+
+        <!-- 7-Day Forecast -->
+        <h2 id="forecast">7 days Weather Forecast</h2>
+        <div class="forecasttable">
+            <table id="forecast-table">
+            </table>
+        </div>
+
+        <!-- Air Pollution -->
+        <h2 id="air">Air Pollution</h2>
+        <table class="big">
+            <tr>
+                <th>AQI</th>
+                <th>Carbon Monoxide</th>
+                <th>Nitrogen Monoxide</th>
+                <th>Nitrogen Dioxide</th>
+                <th>Ozone</th>
+                <th>Sulphur Dioxide</th>
+                <th>PM 2.5</th>
+                <th>PM 10</th>
+                <th>Ammonia</th>
+            </tr>
+            <tr>
+                <td id="aqi">-</td>
+                <td id="co">0.0 μg/m3</td>
+                <td id="no">0.0 μg/m3</td>
+                <td id="no2">0.0 μg/m3</td>
+                <td id="o3">0.0 μg/m3</td>
+                <td id="so2">0.0 μg/m3</td>
+                <td id="pm2.5">0.0 μg/m3</td>
+                <td id="pm10">0.0 μg/m3</td>
+                <td id="nh3">0.0 μg/m3</td>
+            </tr>
+        </table>
+
+        <table class="small">
+            <tr>
+                <th>AQI</th>
+                <td id="aqi1">-</td>
+            </tr>
+            <tr>
+                <th>Carbon Monoxide</th>
+                <td id="co1">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Nitrogen Monoxide</th>
+                <td id="no1">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Nitrogen Dioxide</th>
+                <td id="no21">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Ozone</th>
+                <td id="o31">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Sulphur Dioxide</th>
+                <td id="so21">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>PM 2.5</th>
+                <td id="pm2.51">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>PM 10</th>
+                <td id="pm101">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Ammonia</th>
+                <td id="nh31">0.0 μg/m3</td>
+            </tr>
+        </table>
     </div>
 
-    <div class="copywright">
-      <p data-translate>© 2025 Weather-Blast. All rights reserved.</p>
-      <p data-translate>Developed by <strong>Rajiv Dubey</strong> and contributors</p>
-    </div>
-  </footer>
+    <footer>
+        <div class="logo-name">
+            <h2>{Weather-Blast}</h2>
+            <p>Know the weather. Breathe better. Plan smarter.</p>
+        </div>
+        <div class="contact-sm">
+            <p>Contact Us:</p>
+            <div class="links">
+            <a href="<------add-instagram------>"><img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40"></a>
+            <a href="<------add-linkedin----->"><img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40"></a>
+            <a href="https://github.com/RAJIV81205"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40"></a>
+            </div>
+        </div>
+        <div class="copywright">
+            <p>© 2025 Weather-Blast. All rights reserved.</p>
+            <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
+        </div>
+    </footer>
 
-  <script src="translations.js"></script>
-  <script src="script.js"></script>
+
+    <script src="script.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/news.js"></script>
+    <script src="js/favorites.js"></script>
+    <script src="js/alert-panel.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/weather.js"></script>
+
 </body>
+
 </html>
