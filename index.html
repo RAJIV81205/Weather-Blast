@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weather-Blast</title>
+  <title data-translate>Weather-Blast</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap" defer async></script>
@@ -11,19 +11,24 @@
 </head>
 <body>
   <!-- Back to Top Button -->
-  <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top" aria-label="Scroll to top">
+  <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top" aria-label="Scroll to top" data-translate-aria="Scroll to top">
     <i class="fas fa-arrow-up"></i>
   </button>
 
   <header>
-    <h1>{Weather-Blast}</h1>
-    <button id="dark-mode" aria-label="Toggle dark mode">☀️</button>
+    <h1 data-translate>{Weather-Blast}</h1>
+    <select id="language-switcher" aria-label="Select language">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="te">Telugu</option>
+    </select>
+    <button id="dark-mode" aria-label="Toggle dark mode" data-translate-aria="Toggle dark mode">☀️</button>
   </header>
 
   <div class="up-container">
     <div class="card">
-      <p class="first">ENTER YOUR LOCATION</p>
-      <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code" oninput="autoComplete()" aria-label="Enter city name" />
+      <p class="first" data-translate>ENTER YOUR LOCATION</p>
+      <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code" oninput="autoComplete()" aria-label="Enter city name" data-translate-aria="Enter city name" data-translate-placeholder="Enter city, State name or ZIP Code" />
       <div id="suggestion-box">
         <div id="suggestion-0" class="suggestion" tabindex="0"></div>
         <div id="suggestion-1" class="suggestion" tabindex="0"></div>
@@ -31,9 +36,9 @@
         <div id="suggestion-3" class="suggestion" tabindex="0"></div>
         <div id="suggestion-4" class="suggestion" tabindex="0"></div>
       </div>
-      <button onclick="getWeatherByCity()" aria-label="Search weather">Search</button>
-      <p class="or">OR</p>
-      <button onclick="getWeatherByLocation()" id="locate" aria-label="Use current location">Use Current Location</button>
+      <button onclick="getWeatherByCity()" aria-label="Search weather" data-translate-aria="Search weather" data-translate>Search</button>
+      <p class="or" data-translate>OR</p>
+      <button onclick="getWeatherByLocation()" id="locate" aria-label="Use current location" data-translate-aria="Use current location" data-translate>Use Current Location</button>
     </div>
     <div class="map-container">
       <div id="map"></div>
@@ -43,16 +48,16 @@
   <!-- Loading and Error Messages -->
   <div id="loading" style="display: none;" aria-live="polite">
     <div class="spinner"></div>
-    <p>Loading weather data...</p>
+    <p data-translate>Loading weather data...</p>
   </div>
   <div id="error-message" style="display: none;" role="alert"></div>
 
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-    <h2 style="margin: 0;" id="weat">Weather Information</h2>
+    <h2 style="margin: 0;" id="weat" data-translate>Weather Information</h2>
     <div style="display: flex; align-items: center; gap: 10px; margin-left: 40px;">
       <span id="unitLabel">°C ⇄ °F</span>
       <label class="switch">
-        <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit" />
+        <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit" data-translate-aria="Toggle temperature unit" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -62,19 +67,19 @@
 
   <!-- Recent Searches -->
   <div id="recent-searches">
-    <h3>Recent Searches</h3>
+    <h3 data-translate>Recent Searches</h3>
     <ul id="recent-list">
-      <li>No recent searches yet.</li>
+      <li data-translate>No recent searches yet.</li>
     </ul>
-    <button id="reset-searches-btn" aria-label="Reset search history">Clear Search History</button>
+    <button id="reset-searches-btn" aria-label="Reset search history" data-translate-aria="Reset search history" data-translate>Clear Search History</button>
   </div>
 
   <!-- Nearby Cities Section -->
   <section id="nearby-cities">
-    <h2>Nearby Cities Weather</h2>
+    <h2 data-translate>Nearby Cities Weather</h2>
     <div id="nearby-loading" style="display: none;" aria-live="polite">
       <div class="spinner"></div>
-      <p>Loading nearby cities...</p>
+      <p data-translate>Loading nearby cities...</p>
     </div>
     <div id="nearby-error" style="display: none;" role="alert"></div>
     <div class="nearby-cities-container">
@@ -98,6 +103,19 @@
       <th>Sunset</th>
       <th>Country Code</th>
       <th>Weather Info</th>
+      <th data-translate>Date</th>
+      <th data-translate>Location</th>
+      <th data-translate>Temperature</th>
+      <th data-translate>Feels Like</th>
+      <th data-translate>Humidity</th>
+      <th data-translate>Pressure</th>
+      <th data-translate>Visibility</th>
+      <th data-translate>Wind Speed</th>
+      <th data-translate>Sunrise</th>
+      <th data-translate>Sunset</th>
+      <th data-translate>Country Code</th>
+      <th data-translate>Weather Info</th>
+
     </tr>
     <tr>
       <td id="date1">DD/MM/YY</td>
@@ -118,6 +136,7 @@
 
   <!-- Small Table -->
   <table class="small">
+
     <tr><th>Date</th><td id="date1_small">DD/MM/YY</td></tr>
     <tr><th>Location</th><td id="city1_small">City</td></tr>
     <tr><th>Temperature</th><td id="temp1" data-celsius="0">0°C</td></tr>
@@ -131,35 +150,48 @@
     <tr><th>Sunset</th><td id="ss1">00:00</td></tr>
     <tr><th>Country Code</th><td id="cc1">IN</td></tr>
     <tr><th>Weather Info</th><td id="wi1">Info</td></tr>
+    <tr><th data-translate>Date</th><td id="date1_small">DD/MM/YY</td></tr>
+    <tr><th data-translate>Location</th><td id="city1_small">City</td></tr>
+    <tr><th data-translate>Temperature</th><td id="temp1" data-celsius="0">0°C</td></tr>
+    <tr><th data-translate>Feels Like</th><td id="fl1" data-celsius="0">0°C</td></tr>
+    <tr><th data-translate>Humidity</th><td id="humi1">0 %</td></tr>
+    <tr><th data-translate>Pressure</th><td id="press1">0 hPa</td></tr>
+    <tr><th data-translate>Visibility</th><td id="visi1">0 Km</td></tr>
+    <tr><th data-translate>Wind Speed</th><td id="ws1">0 m/s</td></tr>
+    <tr><th data-translate>Sunrise</th><td id="sr1">00:00</td></tr>
+    <tr><th data-translate>Sunset</th><td id="ss1">00:00</td></tr>
+    <tr><th data-translate>Country Code</th><td id="cc1">IN</td></tr>
+    <tr><th data-translate>Weather Info</th><td id="wi1">Info</td></tr>
+
   </table>
 
   <!-- Forecast Section -->
-  <h2 id="forecast">7 days Weather Forecast</h2>
+  <h2 id="forecast" data-translate>7 days Weather Forecast</h2>
   <div class="forecasttable">
     <table id="forecast-table"></table>
   </div>
 
   <!-- Pollution Section -->
   <section id="pollution-section" class="pollution-container">
-    <h2>Air Pollution</h2>
+    <h2 data-translate>Air Pollution</h2>
     <div class="pollution-info">
-      <p><strong>AQI Level:</strong> <span id="aqi">-</span></p>
-      <p><strong>Health Message:</strong> <span id="aqi-message">Loading...</span></p>
+      <p><strong data-translate>AQI Level:</strong> <span id="aqi">-</span></p>
+      <p><strong data-translate>Health Message:</strong> <span id="aqi-message">Loading...</span></p>
     </div>
   </section>
 
   <!-- Air Pollution Table (Big) -->
   <table class="big">
     <tr>
-      <th>AQI</th>
-      <th>Carbon Monoxide</th>
-      <th>Nitrogen Monoxide</th>
-      <th>Nitrogen Dioxide</th>
-      <th>Ozone</th>
-      <th>Sulphur Dioxide</th>
-      <th>PM 2.5</th>
-      <th>PM 10</th>
-      <th>Ammonia</th>
+      <th data-translate>AQI</th>
+      <th data-translate>Carbon Monoxide</th>
+      <th data-translate>Nitrogen Monoxide</th>
+      <th data-translate>Nitrogen Dioxide</th>
+      <th data-translate>Ozone</th>
+      <th data-translate>Sulphur Dioxide</th>
+      <th data-translate>PM 2.5</th>
+      <th data-translate>PM 10</th>
+      <th data-translate>Ammonia</th>
     </tr>
     <tr>
       <td id="aqi_big">-</td>
@@ -176,45 +208,45 @@
 
   <!-- Air Pollution Table (Small) -->
   <table class="small">
-    <tr><th>AQI</th><td id="aqi1">-</td></tr>
-    <tr><th>Carbon Monoxide</th><td id="co1">0.0 μg/m3</td></tr>
-    <tr><th>Nitrogen Monoxide</th><td id="no1">0.0 μg/m3</td></tr>
-    <tr><th>Nitrogen Dioxide</th><td id="no21">0.0 μg/m3</td></tr>
-    <tr><th>Ozone</th><td id="o31">0.0 μg/m3</td></tr>
-    <tr><th>Sulphur Dioxide</th><td id="so21">0.0 μg/m3</td></tr>
-    <tr><th>PM 2.5</th><td id="pm2_51">0.0 μg/m3</td></tr>
-    <tr><th>PM 10</th><td id="pm101">0.0 μg/m3</td></tr>
-    <tr><th>Ammonia</th><td id="nh31">0.0 μg/m3</td></tr>
+    <tr><th data-translate>AQI</th><td id="aqi1">-</td></tr>
+    <tr><th data-translate>Carbon Monoxide</th><td id="co1">0.0 μg/m3</td></tr>
+    <tr><th data-translate>Nitrogen Monoxide</th><td id="no1">0.0 μg/m3</td></tr>
+    <tr><th data-translate>Nitrogen Dioxide</th><td id="no21">0.0 μg/m3</td></tr>
+    <tr><th data-translate>Ozone</th><td id="o31">0.0 μg/m3</td></tr>
+    <tr><th data-translate>Sulphur Dioxide</th><td id="so21">0.0 μg/m3</td></tr>
+    <tr><th data-translate>PM 2.5</th><td id="pm2_51">0.0 μg/m3</td></tr>
+    <tr><th data-translate>PM 10</th><td id="pm101">0.0 μg/m3</td></tr>
+    <tr><th data-translate>Ammonia</th><td id="nh31">0.0 μg/m3</td></tr>
   </table>
 
   <div id="forecast-section" style="display: none;">
-    <h2>7-Day Temperature Trend</h2>
+    <h2 data-translate>7-Day Temperature Trend</h2>
     <canvas id="tempLineChart"></canvas>
   </div>
 
-  <button id="shareBtn" style="display: none;">📤 Share This</button>
+  <button id="shareBtn" style="display: none;" data-translate>📤 Share This</button>
   
   <!-- Improve-footer-v2 -->
-    <footer>
-  <div class="logo-name">
-    <h2> {Weather-Blast}</h2>
-    <p>Know the weather. Breathe better. Plan smarter.</p>
-  </div>
-
-  <div class="contact-sm">
-    <p>Contact Us:</p>
-    <div class="links">
-      <a href="https://github.com/RAJIV81205/Weather-Blast"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40" /></a>
+  <footer>
+    <div class="logo-name">
+      <h2 data-translate>{Weather-Blast}</h2>
+      <p data-translate>Know the weather. Breathe better. Plan smarter.</p>
     </div>
-  </div>
 
-  <div class="copywright">
-    <p>© 2025 Weather-Blast. All rights reserved.</p>
-    <p>Developed by <strong>Rajiv Dubey</strong> and contributors</p>
-  </div>
-</footer>
+    <div class="contact-sm">
+      <p data-translate>Contact Us:</p>
+      <div class="links">
+        <a href="https://github.com/RAJIV81205/Weather-Blast"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40" /></a>
+      </div>
+    </div>
 
+    <div class="copywright">
+      <p data-translate>© 2025 Weather-Blast. All rights reserved.</p>
+      <p data-translate>Developed by <strong>Rajiv Dubey</strong> and contributors</p>
+    </div>
+  </footer>
+
+  <script src="translations.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-

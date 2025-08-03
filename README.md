@@ -28,6 +28,9 @@
 | [69](https://github.com/RAJIV81205/Weather-Blast/issues/69) | Bug: Poor UX When Searching Without Entering a Location                                           | [DivyanshGarg380](https://github.com/DivyanshGarg380)                                                                        | 2     | 7      |
 | [51](https://github.com/RAJIV81205/Weather-Blast/issues/51) | 🌍 Feature Request: Weather & AQI Overview of Nearby Cities                                       | [abinayagoudjandhyala](https://github.com/abinayagoudjandhyala)                                                              | 3     | 10     |
 | [81](https://github.com/RAJIV81205/Weather-Blast/issues/81) | Feature : Animate the Temperature values when inputs varies ( up/down )                           | [DivyanshGarg380](https://github.com/DivyanshGarg380)                                                                        | 2     | 7      |
+| [64](https://github.com/RAJIV81205/Weather-Blast/issues/64) | Improve footer section                                                                            | [heenasaini](https://github.com/heenasaini)                                                                                  | 2     | 7      |
+| [84](https://github.com/RAJIV81205/Weather-Blast/issues/84) | UI Styling Inconsistency – "Recent Searches" Box                                                  | [infinitepush](https://github.com/infinitepush)                                                                              | 2     | 7      |
+| [31](https://github.com/RAJIV81205/Weather-Blast/issues/31) | Add Multi-Language Support for Weather-Blast                                                      | [Devi128](https://github.com/Devi128)                                                                                        | 3     | 10     |
 
 
 

@@ -14,7 +14,6 @@ function isFahrenheitToggled() {
 }
 
 // === INITIALIZE MAP (No default location) ===
-// CHANGED: Removed default coordinates and initialization on load
 function initMap() {
     map = new mappls.Map("map", {}); // Initialize map without center
 }
@@ -24,7 +23,6 @@ function initMap1(data) {
     const latitude = data.coord.lat;
     const longitude = data.coord.lon;
 
-    // CHANGED: Initialize map if not already initialized
     if (!map) {
         map = new mappls.Map("map", {
             center: { lat: latitude, lng: longitude }
@@ -40,7 +38,7 @@ function initMap1(data) {
     const marker = new mappls.Marker({
         map: map,
         position: { lat: latitude, lng: longitude },
-        title: "Selected Location"
+        title: translations[currentLanguage]["Selected Location"] || "Selected Location"
     });
 
     window.currentMarker = marker;
@@ -129,7 +127,7 @@ function updateSuggestions(suggestions) {
 function getWeatherByCity() {
     const city = document.getElementById("city-input").value;
     if (!city) {
-        showError('error-message', 'Please enter a city name');
+        showError('error-message', translations[currentLanguage]["Please enter a city name"] || 'Please enter a city name');
         return;
     }
     isUserSearch = true;
@@ -148,11 +146,11 @@ function getWeatherByLocation() {
             fetchWeatherByCoordinates(lat, lon);
             initMap1({ coord: { lat, lon } });
         }, () => {
-            showError('error-message', 'Unable to retrieve your location.');
+            showError('error-message', translations[currentLanguage]["Unable to retrieve your location."] || 'Unable to retrieve your location.');
             showLoading(false);
         });
     } else {
-        showError('error-message', 'Geolocation is not supported by this browser.');
+        showError('error-message', translations[currentLanguage]["Geolocation is not supported by this browser."] || 'Geolocation is not supported by this browser.');
     }
 }
 
@@ -188,7 +186,7 @@ function fetchLatLon(city) {
         })
         .catch(err => {
             console.error(err);
-            showError('error-message', 'Invalid location. Try again.');
+            showError('error-message', translations[currentLanguage]["Invalid location. Try again."] || 'Invalid location. Try again.');
             showLoading(false);
         });
 }
@@ -205,7 +203,7 @@ function fetchWeatherByCoordinates(lat, lon) {
         })
         .catch(err => {
             console.error(err);
-            showError('error-message', 'Failed to fetch weather data.');
+            showError('error-message', translations[currentLanguage]["Failed to fetch weather data."] || 'Failed to fetch weather data.');
             showLoading(false);
         });
 }
@@ -237,7 +235,7 @@ function displayWeather(data,uv) {
     getWeatherForecast(lat, lon);
 
     // Titles
-    document.getElementById("weat").innerText = `Weather Information: ${city}`;
+    document.getElementById("weat").innerText = `${translations[currentLanguage]["Weather Information"] || "Weather Information"}: ${city}`;
 
     // Store Celsius in dataset
     ["temp", "fl", "temp1", "fl1"].forEach(id => {
@@ -295,15 +293,15 @@ async function fetchNearbyCities(lat, lon, currentCity) {
                 lon: feature.properties.lon
             }))
             .filter(city => city.name && city.name.toLowerCase() !== currentCity.toLowerCase())
-            .slice(0, 4); // Limit to 4 cities, excluding current city
+            .slice(0, 4);
         if (cities.length === 0) {
-            showError('nearby-error', 'No nearby cities found.');
+            showError('nearby-error', translations[currentLanguage]["No nearby cities found."] || 'No nearby cities found.');
             return;
         }
         fetchNearbyCitiesData(cities, currentCity);
     } catch (err) {
         console.error('Error fetching nearby cities:', err);
-        showError('nearby-error', 'Failed to load nearby cities.');
+        showError('nearby-error', translations[currentLanguage]["Failed to load nearby cities."] || 'Failed to load nearby cities.');
         showLoading(false, 'nearby-loading');
     }
 }
@@ -314,7 +312,7 @@ async function fetchNearbyCitiesData(cities, currentCity) {
     const container = document.querySelector('.nearby-cities-container');
     container.innerHTML = '';
     container.classList.remove('cities-2', 'cities-3', 'cities-4');
-    container.classList.add(`cities-${cities.length}`); // Add dynamic class based on number of cities
+    container.classList.add(`cities-${cities.length}`);
     
     for (const city of cities) {
         try {
@@ -329,17 +327,17 @@ async function fetchNearbyCitiesData(cities, currentCity) {
             const temp = weatherRes.main.temp;
             const icon = weatherRes.weather[0].icon;
             const aqi = pollutionRes.list[0].main.aqi;
-            const aqiLabel = ["Good", "Fair", "Moderate", "Poor", "Very Poor"][aqi - 1] || "Unknown";
+            const aqiLabel = [translations[currentLanguage]["Good"] || "Good", translations[currentLanguage]["Fair"] || "Fair", translations[currentLanguage]["Moderate"] || "Moderate", translations[currentLanguage]["Poor"] || "Poor", translations[currentLanguage]["Very Poor"] || "Very Poor"][aqi - 1] || "Unknown";
             const isCurrentCity = city.name.toLowerCase() === currentCity.toLowerCase();
 
             const card = document.createElement('div');
             card.className = `nearby-city-card aqi-${aqi} ${isCurrentCity ? 'current-city' : ''}`;
             card.tabIndex = 0;
-            card.setAttribute('aria-label', `Weather for ${city.name}: ${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)} ${isCelsius ? '°C' : '°F'}, AQI ${aqiLabel}`);
+            card.setAttribute('aria-label', `${translations[currentLanguage]["Weather for"] || "Weather for"} ${city.name}: ${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)} ${isCelsius ? '°C' : '°F'}, AQI ${aqiLabel}`);
             card.innerHTML = `
-                <h3>${city.name}${isCurrentCity ? ' (Current)' : ''}</h3>
+                <h3>${city.name}${isCurrentCity ? ` (${translations[currentLanguage]["Current"] || "Current"})` : ''}</h3>
                 <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${weatherRes.weather[0].description}">
-                <p>Temperature: <span class="nearby-temp" data-celsius="${temp}">${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)}${isCelsius ? '°C' : '°F'}</span></p>
+                <p>${translations[currentLanguage]["Temperature"] || "Temperature"}: <span class="nearby-temp" data-celsius="${temp}">${isCelsius ? temp.toFixed(1) : celsiusToFahrenheit(temp).toFixed(1)}${isCelsius ? '°C' : '°F'}</span></p>
                 <p class="aqi-value" data-tooltip="AQI ${aqiLabel}: ${getAQIDescription(aqi)}">AQI: ${aqiLabel} (${aqi})</p>
             `;
             card.onclick = () => {
@@ -363,12 +361,12 @@ async function fetchNearbyCitiesData(cities, currentCity) {
 // === AQI DESCRIPTION FOR TOOLTIPS ===
 function getAQIDescription(aqi) {
     switch (aqi) {
-        case 1: return "Air quality is good. No health risk.";
-        case 2: return "Air quality is fair. Sensitive people should take precautions.";
-        case 3: return "Moderate risk for sensitive groups. Limit prolonged outdoor exertion.";
-        case 4: return "Poor air quality. General public may experience discomfort.";
-        case 5: return "Very poor. Avoid outdoor activities if possible.";
-        default: return "Air quality data unavailable.";
+        case 1: return translations[currentLanguage]["Air quality is good. No health risk."] || "Air quality is good. No health risk.";
+        case 2: return translations[currentLanguage]["Air quality is fair. Sensitive people should take precautions."] || "Air quality is fair. Sensitive people should take precautions.";
+        case 3: return translations[currentLanguage]["Moderate risk for sensitive groups. Limit prolonged outdoor exertion."] || "Moderate risk for sensitive groups. Limit prolonged outdoor exertion.";
+        case 4: return translations[currentLanguage]["Poor air quality. General public may experience discomfort."] || "Poor air quality. General public may experience discomfort.";
+        case 5: return translations[currentLanguage]["Very poor. Avoid outdoor activities if possible."] || "Very poor. Avoid outdoor activities if possible.";
+        default: return translations[currentLanguage]["Air quality data unavailable."] || "Air quality data unavailable.";
     }
 }
 
@@ -393,20 +391,20 @@ function fahrenheitToCelsius(f) { return (f - 32) * 5 / 9; }
 // === TOGGLE CELSIUS/FAHRENHEIT DISPLAY ===
 function updateTemperatureDisplay(isCelsius) {
     const elements = ["temp", "fl", "temp1", "fl1"];
-elements.forEach(id => {
-    const el = document.getElementById(id);
-    const c = parseFloat(el.dataset.celsius);
-    let displayed = el.textContent;
-    let oldVal = parseFloat(displayed);
-    if (isNaN(oldVal)) oldVal = c;
-    let newVal, unit;
-    if (isCelsius) {
-        newVal = c;
-        unit = "°C";
-    } else {
-        newVal = celsiusToFahrenheit(c);
-        unit = "°F";
-    }
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        const c = parseFloat(el.dataset.celsius);
+        let displayed = el.textContent;
+        let oldVal = parseFloat(displayed);
+        if (isNaN(oldVal)) oldVal = c;
+        let newVal, unit;
+        if (isCelsius) {
+            newVal = c;
+            unit = "°C";
+        } else {
+            newVal = celsiusToFahrenheit(c);
+            unit = "°F";
+        }
         animateTemperature(el, oldVal, newVal, unit);
     });
 
@@ -427,7 +425,7 @@ function fetchPollution(lat, lon) {
         })
         .catch(error => {
             console.error('Error fetching pollution info:', error);
-            showError('error-message', 'Failed to load air pollution data.');
+            showError('error-message', translations[currentLanguage]["Failed to load air pollution data."] || 'Failed to load air pollution data.');
         });
 }
 
@@ -436,7 +434,13 @@ function displayPollution(data) {
     const aqi = data.list[0].main.aqi;
     const components = data.list[0].components;
 
-    const aqiLabel = ["Good", "Fair", "Moderate", "Poor", "Very Poor"];
+    const aqiLabel = [
+        translations[currentLanguage]["Good"] || "Good",
+        translations[currentLanguage]["Fair"] || "Fair",
+        translations[currentLanguage]["Moderate"] || "Moderate",
+        translations[currentLanguage]["Poor"] || "Poor",
+        translations[currentLanguage]["Very Poor"] || "Very Poor"
+    ];
     const label = aqiLabel[aqi - 1] || "Unknown";
     document.getElementById("aqi").innerText = label;
     document.getElementById("aqi1").innerText = label;
@@ -464,7 +468,7 @@ function getWeatherForecast(lat, lon) {
         })
         .catch(error => {
             console.error('Error fetching forecast:', error);
-            showError('error-message', 'Failed to load weather forecast.');
+            showError('error-message', translations[currentLanguage]["Failed to load weather forecast."] || 'Failed to load weather forecast.');
         });
 }
 
@@ -474,12 +478,36 @@ function convertTemp(temp, isCelsius) {
 
 // === WEATHER NOTES ===
 const notes = {
-    clear: ["Sun’s out, shades on! Don’t forget sunscreen 😎", "Perfect day for an ice cream or a long walk 🍦🚶‍♀️", "Clear skies and good vibes ahead 🌞✨"],
-    clouds: ["Clouds are having a meeting up there! ☁️", "Still a great day to be outdoors — maybe a light jacket?", "Sky's wearing a gray sweater today! 🌫️"],
-    rain: ["Don’t forget your umbrella — it's nature’s splash party ☔💃", "Perfect day for pakoras and Netflix 🍲🎬", "Tiny droplets, big cozy vibes!"],
-    snow: ["Snowball fights or hot cocoa? Or both? ☕❄️", "Snowflakes are saying hello! ❄️👋", "Winter wonderland loading... ⛄❄️"],
-    thunderstorm: ["⚡ Dramatic skies incoming! Stay safe and unplug if needed.", "A good day to stay in and watch the show from your window 🎭", "It's Thor's bowling night! ⚡🎳"],
-    atmosphere: ["Dreamy, soft-focus day! 🌫️✨", "It’s one of those days… where the air's got secrets. Stay curious, stay indoors if needed! 🔮🌪️", "Atmospheric trickery afoot! The skies are casting illusions — step carefully, seer of weather 👁️‍🗨️🌫️"]
+    clear: [
+        translations[currentLanguage]["Sun’s out, shades on! Don’t forget sunscreen 😎"] || "Sun’s out, shades on! Don’t forget sunscreen 😎",
+        translations[currentLanguage]["Perfect day for an ice cream or a long walk 🍦🚶‍♀️"] || "Perfect day for an ice cream or a long walk 🍦🚶‍♀️",
+        translations[currentLanguage]["Clear skies and good vibes ahead 🌞✨"] || "Clear skies and good vibes ahead 🌞✨"
+    ],
+    clouds: [
+        translations[currentLanguage]["Clouds are having a meeting up there! ☁️"] || "Clouds are having a meeting up there! ☁️",
+        translations[currentLanguage]["Still a great day to be outdoors — maybe a light jacket?"] || "Still a great day to be outdoors — maybe a light jacket?",
+        translations[currentLanguage]["Sky's wearing a gray sweater today! 🌫️"] || "Sky's wearing a gray sweater today! 🌫️"
+    ],
+    rain: [
+        translations[currentLanguage]["Don’t forget your umbrella — it's nature’s splash party ☔💃"] || "Don’t forget your umbrella — it's nature’s splash party ☔💃",
+        translations[currentLanguage]["Perfect day for pakoras and Netflix 🍲🎬"] || "Perfect day for pakoras and Netflix 🍲🎬",
+        translations[currentLanguage]["Tiny droplets, big cozy vibes!"] || "Tiny droplets, big cozy vibes!"
+    ],
+    snow: [
+        translations[currentLanguage]["Snowball fights or hot cocoa? Or both? ☕❄️"] || "Snowball fights or hot cocoa? Or both? ☕❄️",
+        translations[currentLanguage]["Snowflakes are saying hello! ❄️👋"] || "Snowflakes are saying hello! ❄️👋",
+        translations[currentLanguage]["Winter wonderland loading... ⛄❄️"] || "Winter wonderland loading... ⛄❄️"
+    ],
+    thunderstorm: [
+        translations[currentLanguage]["⚡ Dramatic skies incoming! Stay safe and unplug if needed."] || "⚡ Dramatic skies incoming! Stay safe and unplug if needed.",
+        translations[currentLanguage]["A good day to stay in and watch the show from your window 🎭"] || "A good day to stay in and watch the show from your window 🎭",
+        translations[currentLanguage]["It's Thor's bowling night! ⚡🎳"] || "It's Thor's bowling night! ⚡🎳"
+    ],
+    atmosphere: [
+        translations[currentLanguage]["Dreamy, soft-focus day! 🌫️✨"] || "Dreamy, soft-focus day! 🌫️✨",
+        translations[currentLanguage]["It’s one of those days… where the air's got secrets. Stay curious, stay indoors if needed! 🔮🌪️"] || "It’s one of those days… where the air's got secrets. Stay curious, stay indoors if needed! 🔮🌪️",
+        translations[currentLanguage]["Atmospheric trickery afoot! The skies are casting illusions — step carefully, seer of weather 👁️‍🗨️🌫️"] || "Atmospheric trickery afoot! The skies are casting illusions — step carefully, seer of weather 👁️‍🗨️🌫️"
+    ]
 };
 
 const weatherKeywords = {
@@ -527,14 +555,14 @@ function showWeatherForecast(data) {
     document.getElementById("forecast-section").style.display = "block";
 
     document.getElementById("forecast-table").innerHTML = `
-        <tr><th>Date</th>${dates}</tr>
-        <tr><th>Max-Temperature</th>${maxTemps}</tr>
-        <tr><th>Min-Temperature</th>${minTemps}</tr>
-        <tr><th>Sunrise</th>${sunrises}</tr>
-        <tr><th>Sunset</th>${sunsets}</tr>
-        <tr><th>Summary</th>${summaries}</tr>
-        <tr><th>Something for you!<br>(hover to unlock)</th>${noteForUser}</tr>
-        <tr><th>Icon</th>${icons}</tr>
+        <tr><th>${translations[currentLanguage]["Date"] || "Date"}</th>${dates}</tr>
+        <tr><th>${translations[currentLanguage]["Max-Temperature"] || "Max-Temperature"}</th>${maxTemps}</tr>
+        <tr><th>${translations[currentLanguage]["Min-Temperature"] || "Min-Temperature"}</th>${minTemps}</tr>
+        <tr><th>${translations[currentLanguage]["Sunrise"] || "Sunrise"}</th>${sunrises}</tr>
+        <tr><th>${translations[currentLanguage]["Sunset"] || "Sunset"}</th>${sunsets}</tr>
+        <tr><th>${translations[currentLanguage]["Summary"] || "Summary"}</th>${summaries}</tr>
+        <tr><th>${translations[currentLanguage]["Something for you!"] || "Something for you!"}<br>${translations[currentLanguage]["(hover to unlock)"] || "(hover to unlock)"}</th>${noteForUser}</tr>
+        <tr><th>${translations[currentLanguage]["Icon"] || "Icon"}</th>${icons}</tr>
     `;
 
     if (toggle === 0) {
@@ -559,13 +587,13 @@ function showWeatherForecast(data) {
             alertEl.innerHTML = `
                 <div class="alert-header">
                     ⚠️ ${alert.event}
-                    <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'" aria-label="Close alert">×</button>
+                    <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'" aria-label="${translations[currentLanguage]["Close alert"] || "Close alert"}">×</button>
                 </div>
                 <div class="alert-body">
-                    <p><strong>From:</strong> ${new Date(alert.start * 1000).toLocaleString()}</p>
-                    <p><strong>To:</strong> ${new Date(alert.end * 1000).toLocaleString()}</p>
-                    <p><strong>Description:</strong><br>${alert.description.replace(/\n/g, '<br>')}</p>
-                    <p><strong>Source:</strong> ${alert.sender_name}</p>
+                    <p><strong>${translations[currentLanguage]["From"] || "From"}:</strong> ${new Date(alert.start * 1000).toLocaleString()}</p>
+                    <p><strong>${translations[currentLanguage]["To"] || "To"}:</strong> ${new Date(alert.end * 1000).toLocaleString()}</p>
+                    <p><strong>${translations[currentLanguage]["Description"] || "Description"}:</strong><br>${alert.description.replace(/\n/g, '<br>')}</p>
+                    <p><strong>${translations[currentLanguage]["Source"] || "Source"}:</strong> ${alert.sender_name}</p>
                 </div>
             `;
             alertBox.appendChild(alertEl);
@@ -595,7 +623,7 @@ function showWeatherForecast(data) {
             labels: chartLabels,
             datasets: [
                 {
-                    label: 'Max Temp',
+                    label: translations[currentLanguage]["Max Temp"] || 'Max Temp',
                     data: maxTempValues,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -603,7 +631,7 @@ function showWeatherForecast(data) {
                     tension: 0.3
                 },
                 {
-                    label: 'Min Temp',
+                    label: translations[currentLanguage]["Min Temp"] || 'Min Temp',
                     data: minTempValues,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -623,7 +651,7 @@ function showWeatherForecast(data) {
                 },
                 title: {
                     display: true,
-                    text: '7-Day Temperature Trend',
+                    text: translations[currentLanguage]["7-Day Temperature Trend"] || '7-Day Temperature Trend',
                     color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
                 }
             },
@@ -631,7 +659,7 @@ function showWeatherForecast(data) {
                 y: {
                     title: {
                         display: true,
-                        text: `Temperature (${isCelsius ? '°C' : '°F'})`,
+                        text: `${translations[currentLanguage]["Temperature"] || 'Temperature'} (${isCelsius ? '°C' : '°F'})`,
                         color: toggle === 0 ? 'white' : 'rgba(22, 66, 60, 1)'
                     },
                     ticks: {
@@ -699,7 +727,6 @@ document.addEventListener("DOMContentLoaded", () => {
         toggle = 0;
         changedisplay();
     }
-    // CHANGED: Removed fetchWeatherByCity("Kolkata")
     renderRecentSearches();
 });
 
@@ -750,12 +777,12 @@ shareBtn.onclick = async () => {
     const description = document.getElementById("wi").textContent;
     const aqi = document.getElementById("aqi").textContent;
 
-    const shareText = `📍 ${city}\n🌡️ Temp: ${temperature}\n🌤️ ${description}\n🌫️ AQI: ${aqi}\nShared via Weather Blast`;
+    const shareText = `${translations[currentLanguage]["📍"] || "📍"} ${city}\n${translations[currentLanguage]["🌡️ Temp"] || "🌡️ Temp"}: ${temperature}\n${translations[currentLanguage]["🌤️"] || "🌤️"} ${description}\n${translations[currentLanguage]["🌫️ AQI"] || "🌫️ AQI"}: ${aqi}\n${translations[currentLanguage]["Shared via Weather Blast"] || "Shared via Weather Blast"}`;
 
     if (navigator.share) {
         try {
             await navigator.share({
-                title: "Weather Update",
+                title: translations[currentLanguage]["Weather Update"] || "Weather Update",
                 text: shareText,
             });
         } catch (err) {
@@ -763,7 +790,7 @@ shareBtn.onclick = async () => {
         }
     } else {
         navigator.clipboard.writeText(shareText).then(() => {
-            alert("Copied to clipboard!");
+            alert(translations[currentLanguage]["Copied to clipboard!"] || "Copied to clipboard!");
         });
     }
 };
@@ -786,12 +813,12 @@ function updateRecentSearches(newSearch) {
 function renderRecentSearches() {
     const recent = JSON.parse(localStorage.getItem('recentSearches')) || [];
     if (recent.length === 0) {
-        recentList.innerHTML = '<li>No recent searches yet.</li>';
+        recentList.innerHTML = `<li data-translate>${translations[currentLanguage]["No recent searches yet."] || "No recent searches yet."}</li>`;
         return;
     }
 
     recentList.innerHTML = recent
-        .map(item => `<li class="recent-item" tabindex="0" role="button" aria-label="Search weather for ${item}">${item}</li>`)
+        .map(item => `<li class="recent-item" tabindex="0" role="button" aria-label="${translations[currentLanguage]["Search weather for"] || "Search weather for"} ${item}">${item}</li>`)
         .join('');
 
     document.querySelectorAll('.recent-item').forEach(el => {
@@ -811,13 +838,12 @@ function renderRecentSearches() {
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (!query) {
-        showError('error-message', 'Please enter a city name');
+        showError('error-message', translations[currentLanguage]["Please enter a city name"] || 'Please enter a city name');
         return;
     }
     updateRecentSearches(query);
 });
 
-// CHANGED: Remove window.onload to prevent default map initialization
 resetBtn.addEventListener('click', () => {
     localStorage.removeItem('recentSearches');
     renderRecentSearches();
