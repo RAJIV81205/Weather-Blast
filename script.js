@@ -165,8 +165,8 @@ function fetchWeatherByCity(city) {
             return res.json();
         })
         .then(data => {
-            displayWeather(data);
             fetchNearbyCities(data.coord.lat, data.coord.lon, city);
+            getUvData(data)
             showLoading(false);
         })
         .catch(err => {
@@ -199,7 +199,7 @@ function fetchWeatherByCoordinates(lat, lon) {
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            displayWeather(data);
+            getUvData(data)
             fetchNearbyCities(lat, lon, data.name);
             showLoading(false);
         })
@@ -209,9 +209,17 @@ function fetchWeatherByCoordinates(lat, lon) {
             showLoading(false);
         });
 }
-
+// === GET UVINDEX FROM LAT/LON ===
+function getUvData(data) {
+  const url = `https://api.openweathermap.org/data/2.5//uvi?lat=${data.coord.lat}&lon=${data.coord.lon}&appid=${apiKey}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((uv) => {
+    displayWeather(data,uv)
+    });
+}
 // === DISPLAY WEATHER DETAILS IN UI ===
-function displayWeather(data) {
+function displayWeather(data,uv) {
     const { temp, feels_like, humidity, pressure } = data.main;
     const visibility = data.visibility / 1000;
     const windSpeed = data.wind.speed;
@@ -249,6 +257,8 @@ function displayWeather(data) {
     document.getElementById("wi1").innerText = weatherdes;
     document.getElementById("humi").innerText = `${humidity}%`;
     document.getElementById("humi1").innerText = `${humidity}%`;
+    document.getElementById("bigUV").innerText = `${uv.value}`;
+    document.getElementById("smallUV").innerText = `${uv.value}`;
     document.getElementById("press").innerText = `${pressure} hPa`;
     document.getElementById("press1").innerText = `${pressure} hPa`;
     document.getElementById("visi").innerText = `${visibility} Km`;
