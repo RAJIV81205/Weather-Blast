@@ -8,66 +8,68 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/layout_improvement.css">
     <link rel="stylesheet" href="css/news.css">
     <link rel="stylesheet" href="css/favorites.css">
     <link rel="stylesheet" href="css/alert-panel.css">
     <link rel="stylesheet" href="css/settings.css">
-    <script
-        src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap"
-        defer async></script>
+    <script src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap" defer async></script>
 
     <!-- Font Awesome CDN -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-<!-- Back to Top Button -->
-<button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
 
 <body>
-    <header>
-        <div class="navbar-brand">
-            <h1>{Weather-Blast}</h1>
-        </div>
-        
-        <nav class="navbar">
-            <div class="nav-actions">
-                <div class="nav-links">
-                    <a href="#home" class="nav-link active" onclick="showSection('home')">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                    <a href="#news" class="nav-link" onclick="showSection('news')">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Weather News</span>
-                    </a>
-                    <a href="#favorites" class="nav-link" onclick="showSection('favorites')">
-                        <i class="fas fa-star"></i>
-                        <span>Favorites</span>
-                    </a>
-                    <a href="#alerts" class="nav-link" id="alertsLink" onclick="toggleAlerts()">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Alerts</span>
-                    </a>
-                    <a href="#settings" class="nav-link" onclick="showSection('settings')">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </a>
-                </div>
-                <button id="dark-mode">☀️</button>
-            </div>
-        </nav>
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-    </header>
+    
+        <header>
+  <div class="navbar-brand">
+    <h1>{Weather-Blast}</h1>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-actions">
+      <div class="nav-links">
+        <a href="#home" class="nav-link active" onclick="showSection('home')">
+          <i class="fas fa-home"></i><span>Home</span>
+        </a>
+        <a href="#news" class="nav-link" onclick="showSection('news')">
+          <i class="fas fa-newspaper"></i><span>Weather News</span>
+        </a>
+        <a href="#favorites" class="nav-link" onclick="showSection('favorites')">
+          <i class="fas fa-star"></i><span>Favorites</span>
+        </a>
+        <a href="#alerts" class="nav-link" id="alertsLink" onclick="toggleAlerts()">
+          <i class="fas fa-exclamation-triangle"></i><span>Alerts</span>
+        </a>
+        <a href="#settings" class="nav-link" onclick="showSection('settings')">
+          <i class="fas fa-cog"></i><span>Settings</span>
+        </a>
+      </div>
+
+      <!-- 🌍 LOCATION DISPLAY -->
+      <div class="location-display">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="location-name">Detecting...</span>
+      </div>
+
+      
+
+      <!-- ☀️ DARK MODE -->
+      <button id="dark-mode">☀️</button>
+    </div>
+  </nav>
+
+  <!-- 📱 Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+</header>
+
 
     <!-- Main Content Sections -->
     <main id="main-content">
@@ -218,29 +220,119 @@
             </div>
         </section>
     </main>
+    
 
-    <!-- Original Home Page Content (Always Visible) -->
-    <div id="original-home-content">
-        <div class="up-container">
-            <div class="card">
-                <p class="first">ENTER YOUR LOCATION</p>
-                <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code"
-                    oninput="autoComplete()">
-                <div id="suggestion-box">
-                    <div id="suggestion-0" class="suggestion"></div>
-                    <div id="suggestion-1" class="suggestion"></div>
-                    <div id="suggestion-2" class="suggestion"></div>
-                    <div id="suggestion-3" class="suggestion"></div>
-                    <div id="suggestion-4" class="suggestion"></div>
-                </div>
-                <button onclick="getWeatherByCity()">Search</button>
-                <p class="or">OR</p>
-                <button onclick="getWeatherByLocation()" id="locate">Use Current Location</button>
-            </div>
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
+<!-- Original Home Page Content -->
+<div id="original-home-content">
+  <div class="weather-content-wrapper">
+
+    <!-- Left: Location Input + Map -->
+    <div class="up-container">
+
+      <!-- Input Card -->
+      <div class="card input-card">
+        <p class="first">ENTER YOUR LOCATION</p>
+
+        <!-- Search Wrapper -->
+        <div class="search-wrapper">
+          <input 
+            type="text" 
+            id="city-input" 
+            placeholder="Enter city, state or ZIP code" 
+            oninput="autoComplete()"
+          />
+          <button onclick="getWeatherByCity()" class="search-btn">
+            <i class="fas fa-search"></i>
+          </button>
         </div>
+
+        <!-- Suggestion Box -->
+        <div id="suggestion-box">
+          <div id="suggestion-0" class="suggestion"></div>
+          <div id="suggestion-1" class="suggestion"></div>
+          <div id="suggestion-2" class="suggestion"></div>
+          <div id="suggestion-3" class="suggestion"></div>
+          <div id="suggestion-4" class="suggestion"></div>
+        </div>
+
+        <!-- OR + Locate Button -->
+        <p class="or">OR</p>
+        <button onclick="getWeatherByLocation()" id="locate">Use Current Location</button>
+      </div>
+
+      <!-- Map Display -->
+      <div class="map-container">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <!-- Right: Weather Summary + Forecast Tabs -->
+    <div class="weather-card-right">
+
+      <!-- Weather Main Info -->
+      <div class="weather-main">
+        <div class="top-row">
+          <img 
+            src="weather-icon.png" 
+            alt="Weather Icon" 
+            class="weather-icon" 
+            id="weather-icon"
+          />
+          <div class="weather-temp" id="temperature">--°C</div>
+        </div>
+        <div class="weather-description" id="weather-description">--</div>
+        <div class="city-date">
+          <div class="city-name" id="city-name">City, Country</div>
+          <div class="date-time" id="date-time">--:--</div>
+        </div>
+      </div>
+
+      <!-- Weather Details -->
+      <div class="weather-details-grid">
+        <div class="detail-box">
+          <span>Humidity</span>
+          <span id="humidity">--%</span>
+        </div>
+        <div class="detail-box">
+          <span>Wind</span>
+          <span id="wind-speed">-- km/h</span>
+        </div>
+        <div class="detail-box">
+          <span>Pressure</span>
+          <span id="pressure">-- hPa</span>
+        </div>
+        <div class="detail-box">
+          <span>Visibility</span>
+          <span id="visibility">-- km</span>
+        </div>
+      </div>
+
+      <!-- Forecast Tabs -->
+      <div class="forecast-section">
+        <div class="forecast-tabs">
+          <button class="tab active" data-tab="today">Today</button>
+          <button class="tab" data-tab="tomorrow">Tomorrow</button>
+          <button class="tab" data-tab="10days">10 Days</button>
+          <button class="tab" data-tab="monthly">Monthly Cast</button>
+        </div>
+
+        <!-- Hourly Forecast -->
+        <div class="hourly-forecast-list">
+          <div class="hour-card">
+            <span class="hour-time">1AM</span>
+            <div class="hour-icon">☁️</div>
+            <div class="hour-temp">12°</div>
+            <div class="hour-wind">Wind: 120km</div>
+            <div class="hour-humidity">Humidity: 59%</div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End of weather-card-right -->
+
+  </div> 
+</div> <!-- End of original-home-content -->
+
 
         <div class="weather-info-header">
             <h2 id="weat">Weather Information</h2>
@@ -417,6 +509,8 @@
         </table>
     </div>
 
+    
+
     <footer>
         <div class="logo-name">
             <h2>{Weather-Blast}</h2>
@@ -425,9 +519,9 @@
         <div class="contact-sm">
             <p>Contact Us:</p>
             <div class="links">
-            <a href="<------add-instagram------>"><img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40"></a>
-            <a href="<------add-linkedin----->"><img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40"></a>
-            <a href="https://github.com/RAJIV81205"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40"></a>
+                <a href="<------add-instagram------>"><img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="40"></a>
+                <a href="<------add-linkedin----->"><img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="40"></a>
+                <a href="https://github.com/RAJIV81205"><img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="40"></a>
             </div>
         </div>
         <div class="copywright">
@@ -435,7 +529,6 @@
             <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
         </div>
     </footer>
-
 
     <script src="script.js"></script>
     <script src="js/main.js"></script>
@@ -445,7 +538,6 @@
     <script src="js/alert-panel.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/weather.js"></script>
-
 </body>
 
 </html>

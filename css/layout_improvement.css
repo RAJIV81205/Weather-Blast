@@ -1,0 +1,322 @@
+/* Layout & card spacing improvement */
+.up-container {
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  justify-content: center;
+  flex: 1;
+  min-width: 350px;
+}
+
+/* Smaller padding and neat alignment inside card */
+.card {
+  transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    height: 500px;
+    width: 600px;
+    background-color: rgba(196, 218, 210, 1);
+    border: 2px solid rgba(22, 66, 60, 1);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.first {
+    font-size:2rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    text-decoration: underline;
+    color: black;
+}
+
+.or {
+    color: black;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.input-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+/* Flex layout for input + search icon */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Slightly shrink search input to accommodate icon */
+#city-input {
+    padding-left: 10px;
+    margin-bottom: 10px;
+    font-family: "Itim", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    background-color: rgba(233, 239, 236, 1);
+    -webkit-text-fill-color: rgba(22, 66, 60, 1);
+    border-radius: 50px;
+    border: 1px solid rgba(22, 66, 60, 1);
+    width: 300px;
+    height: 60px;
+}
+
+/* Search icon inside button */
+.search-btn {
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(106, 156, 137, 1);
+  color: white;
+  font-size: 18px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.search-btn i {
+  margin: 0;
+}
+
+/* Make map responsive and aligned */
+#map {
+  width: 600px;
+  height: 500px;
+  border-radius: 30px;
+  border: 2px solid rgba(22, 66, 60, 1);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* Suggestion box cleaner layout */
+#suggestion-box {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.suggestion {
+  padding: 5px 10px;
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background-color: #e6f4f1;
+}
+
+/* Style for locate button */
+#locate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 18px;
+  font-family: "Itim", cursive;
+  -webkit-text-fill-color: rgba(22, 66, 60, 1);
+  font-weight: 400;
+  border-radius: 50px;
+   width: 200px;
+   height: 60px;
+   margin-top: 10px;
+ 
+}
+
+/* -----------------weather card janviiii */
+.weather-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 100px;
+}
+
+.weather-card-right {
+  margin-top: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 500px;
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 0 0 500px;
+  background-color: #C4DAD2 ;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.2);
+  border: 2px solid rgba(22, 66, 60, 1);
+}
+
+.weather-card-right:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+
+.weather-main {
+  text-align: center;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.weather-icon {
+  width: 70px;
+  height: 70px;
+}
+
+.weather-temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.weather-description {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  color: #666;
+}
+
+.city-date {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.city-name {
+  font-weight: bold;
+}
+
+.weather-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-box {
+  background-color: #e6f2ec;
+  border-radius: 10px;
+  padding: 0.8rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.detail-box span:first-child {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.detail-box span:last-child {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Forecast Tabs */
+.forecast-section {
+  margin-top: 2rem;
+}
+
+.forecast-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 0.8rem;
+  background:rgba(106, 156, 137, 1);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: rgba(106, 156, 137, 1);
+}
+
+.tab.see-monthly {
+  margin-left: auto;
+  background:rgba(106, 156, 137, 1);
+}
+.tab:hover {
+  background: rgba(86, 136, 117, 1); 
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Hourly Forecast */
+.hourly-forecast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hour-card {
+  background: #e6f2ec;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  
+}
+
+.hour-time {
+  grid-column: 1 / 4;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.hour-icon {
+  font-size: 1.5rem;
+}
+
+.hour-temp,
+.hour-wind,
+.hour-humidity {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+  .weather-content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card,
+  .weather-card-right,
+  #map {
+    width: 90%;
+  }
+}

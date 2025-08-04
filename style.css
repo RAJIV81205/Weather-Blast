@@ -840,6 +840,7 @@ td {
         width: 100%;
         justify-content: center;
     }
+
     
     .mobile-menu-toggle {
         display: block;
@@ -937,7 +938,7 @@ h2 {
     text-align: center;
 }
 
-.up-container {
+/* .up-container {
     width: 90%;
     height: fit-content;
     display: flex;
@@ -1040,7 +1041,7 @@ button {
 #locate {
     width: 280px;
     margin-top: 20px;
-}
+} */
 
 
 table {
