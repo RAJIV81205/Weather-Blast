@@ -117,6 +117,61 @@ header {
 #original-home-content {
     display: block; /* Show by default */
 }
+/* Container for search and refresh buttons */
+.search-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    margin-top: 10px;
+    width: 100%;
+}
+
+.search-buttons button:first-child {
+    flex-grow: 1;
+    width: auto;
+    margin-right: 10px; 
+}
+
+/* Style the refresh button with an icon */
+#refresh-button {
+    width: 40px; 
+    height: 40px; 
+    padding: 0;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(106, 156, 137, 1);
+    color: white;
+    border: 1px solid rgba(22, 66, 60, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+    margin-left: -15px; 
+}
+
+#refresh-button:hover {
+    background-color: #5e9688;
+    transform: rotate(360deg) scale(1.1); 
+}
+
+.card button {
+    height: 40px;
+    font-size: 25px;
+    background-color: rgba(106, 156, 137, 1);
+    border: 1px solid rgba(22, 66, 60, 1);
+    border-radius: 50px;
+    color: rgba(245, 245, 245, 1);
+    font-family: "Itim", cursive;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 0.5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
 /* Weather Info Header */
 .weather-info-header {

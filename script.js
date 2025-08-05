@@ -759,3 +759,53 @@ function scrollToTop() {
 window.addEventListener("beforeunload", function () {
     window.scrollTo(0, 0);
 });
+
+let lastSearchQuery = '';
+
+function getWeatherByCity() {
+    const city = document.getElementById("city-input").value;
+    if (!city) {
+        alert("PLEASE ENTER CITY NAME");
+        return;
+    }
+    // Store the city for potential refresh
+    lastSearchQuery = city;
+    showLoader();
+    fetchWeatherByCity(city);
+}
+
+// Update existing getWeatherByLocation function
+function getWeatherByLocation() {
+    lastSearchQuery = 'current_location'; 
+    showLoader();
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                fetchWeatherByCoordinates(latitude, longitude);
+            },
+            (error) => {
+                hideLoader();
+                console.error("Geolocation error:", error);
+                alert("Could not get your location. Please enter a city manually.");
+            }
+        );
+    } else {
+        hideLoader();
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+// New function to handle the refresh button click
+function refreshWeatherData() {
+    if (lastSearchQuery === 'current_location') {
+        // Re-fetch weather using geolocation
+        getWeatherByLocation();
+    } else if (lastSearchQuery) {
+        // Re-fetch weather for the last searched city
+        fetchWeatherByCity(lastSearchQuery);
+    } else {
+        // Handle case where no search has been performed yet
+        alert("Please enter a location and search, or use your current location, before refreshing. 🔄");
+    }
+}
