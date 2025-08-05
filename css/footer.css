@@ -1,0 +1,85 @@
+/* ===== Base Footer Styles ===== */
+.styled-footer {
+  background: linear-gradient(to right, #7cb77c, #f9fff9);
+  padding: 40px 20px;
+  color: #2b2b2b;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 30px;
+  border-top: 2px solid #b2e8b2;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.footer-section {
+  flex: 1 1 250px;
+  text-align: center;
+}
+
+.logo-name h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #207a4c;
+}
+
+.logo-name p {
+  font-size: 15px;
+  font-weight: 500;
+  color: #3b3b3b;
+}
+
+.contact-sm .contact-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #207a4c;
+}
+
+.social-links a img {
+  width: 32px;
+  margin: 0 8px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.social-links a:hover img {
+  transform: scale(1.15);
+  filter: brightness(0.8);
+}
+
+.copywright p {
+  font-size: 13px;
+  margin-top: 6px;
+  color: #555;
+}
+
+/* ===== Dark Mode Footer (based on body.dark-mode) ===== */
+body.dark-mode .styled-footer {
+  background: #0c0c0c;
+  color: #fff4f4;
+  border-top: 2px solid #2e7d32;
+  box-shadow: 0 -4px 12px rgba(255, 255, 255, 0.08);
+}
+body.dark-mode h2 {
+  color: white;
+}
+body.dark-mode .logo-name h2 {
+  color: #cef5d0;
+}
+
+body.dark-mode .logo-name p {
+  color: #bbb;
+}
+
+body.dark-mode .contact-sm .contact-title {
+  color: #ccface;
+}
+
+body.dark-mode .copywright p {
+  color: #fdf8f8;
+}
+
+body.dark-mode .social-links a img {
+  filter: brightness(0.85);
+}
