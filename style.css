@@ -761,6 +761,12 @@ body[style*="rgba(17, 34, 29, 0.7)"] .favorite-actions button.delete-btn:hover {
     box-shadow: 0 0 0 3px rgba(106, 156, 137, 0.2);
 }
 
+/* Dark Mode Dropdown-settings */
+body[style*="rgba(17, 34, 29, 0.7)"] .setting-select option {
+    background-color: rgba(22, 66, 60, 0.95);
+    color: rgb(233, 239, 236);
+}
+
 /* Toggle Switch Styles */
 .toggle-switch {
     position: relative;
