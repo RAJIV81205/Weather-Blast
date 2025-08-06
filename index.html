@@ -16,20 +16,15 @@
         src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap"
         defer async></script>
 
-    <!-- Font Awesome CDN -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 
 </head>
-<!-- Back to Top Button -->
 <button id="backToTopBtn" onclick="scrollToTop()" title="Back to Top">
-  <i class="fas fa-arrow-up"></i>
+    <i class="fas fa-arrow-up"></i>
 </button>
 
 
@@ -38,7 +33,7 @@
         <div class="navbar-brand">
             <h1>{Weather-Blast}</h1>
         </div>
-        
+
         <nav class="navbar">
             <div class="nav-actions">
                 <div class="nav-links">
@@ -67,20 +62,15 @@
             </div>
         </nav>
 
-        <!-- Mobile Menu Toggle -->
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
             <i class="fas fa-bars"></i>
         </button>
     </header>
 
-    <!-- Main Content Sections -->
     <main id="main-content">
-        <!-- Home Section (Original Weather Content) -->
         <section id="home-section" class="content-section active">
-            <!-- Keep home section empty - original content will be outside sections -->
-        </section>
+            </section>
 
-        <!-- Weather News Section -->
         <section id="news-section" class="content-section">
             <h2>Weather News & Natural Disasters</h2>
             <div class="news-container">
@@ -94,11 +84,9 @@
             </div>
         </section>
 
-        <!-- Favorites Section -->
         <section id="favorites-section" class="content-section">
             <h2>Favorite Locations</h2>
-            
-            <!-- Statistics Cards -->
+
             <div class="favorites-stats">
                 <div class="stat-card">
                     <div class="stat-label">Total Favorites</div>
@@ -113,7 +101,7 @@
                     <div class="stat-number" id="weather-updates">--</div>
                 </div>
             </div>
-            
+
             <div class="favorites-container">
                 <div class="add-favorite">
                     <input type="text" id="favorite-input" placeholder="Add a new favorite location...">
@@ -122,12 +110,10 @@
                     </button>
                 </div>
                 <div id="favorites-list" class="favorites-list">
-                    <!-- Default favorite removed -->
-                </div>
+                    </div>
             </div>
         </section>
 
-        <!-- Settings Section -->
         <section id="settings-section" class="content-section">
             <h2><i class="fas fa-cog"></i> Settings & Preferences</h2>
             <div class="settings-container">
@@ -175,7 +161,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="settings-group">
                     <h3>
                         <i class="fas fa-palette"></i>
@@ -223,7 +209,6 @@
         </section>
     </main>
 
-    <!-- Original Home Page Content (Always Visible) -->
     <div id="original-home-content">
         <div class="up-container">
             <div class="card">
@@ -231,11 +216,13 @@
                 <input type="text" id="city-input" placeholder="Enter city, State name or ZIP Code"
                     oninput="autoComplete()">
                 <div id="search-loader" style="display:none; text-align:center; margin-top:10px;">
-                  <svg width="40" height="40" viewBox="0 0 40 40">
-                    <circle cx="20" cy="20" r="16" stroke="#3498db" stroke-width="4" fill="none" stroke-dasharray="100" stroke-dashoffset="60">
-                      <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite"/>
-                    </circle>
-                  </svg>
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <circle cx="20" cy="20" r="16" stroke="#3498db" stroke-width="4" fill="none"
+                            stroke-dasharray="100" stroke-dashoffset="60">
+                            <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
+                                dur="1s" repeatCount="indefinite" />
+                        </circle>
+                    </svg>
                 </div>
                 <div id="suggestion-box">
                     <div id="suggestion-0" class="suggestion"></div>
@@ -247,7 +234,7 @@
                 <div class="search-buttons">
                     <button onclick="getWeatherByCity()" style="margin-left: 10px;">Search</button>
                     <button onclick="refreshWeatherData()" id="refresh-button" title="Refresh Weather">
-                    <i class="fas fa-sync-alt"></i>
+                        <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
                 <p class="or">OR</p>
@@ -264,13 +251,14 @@
                 <span id="unitLabel">°C ⇄ °F</span>
                 <label class="switch">
                     <input type="checkbox" id="unitToggle" aria-label="Toggle temperature unit">
-                    <!-- Toggle for Celsius/Fahrenheit -->
                     <span class="slider round"></span>
                 </label>
             </div>
+            <button id="shareButton">
+                <i class="fas fa-share-alt"></i>
+            </button>
         </div>
 
-        <!-- Weather Tables -->
         <table class="big">
             <tr>
                 <th>Date</th>
@@ -359,14 +347,12 @@
             </tr>
         </table>
 
-        <!-- 7-Day Forecast -->
         <h2 id="forecast">7 days Weather Forecast</h2>
         <div class="forecasttable">
             <table id="forecast-table">
             </table>
         </div>
 
-        <!-- Air Pollution -->
         <h2 id="air">Air Pollution</h2>
         <table class="big">
             <tr>
@@ -434,48 +420,44 @@
     </div>
 
     <footer>
-    <div class="footer-container">
-        <!-- Brand Section -->
-        <div class="footer-brand">
-            <h2>{Weather-Blast}</h2>
-            <p>Know the weather. Breathe better. Plan smarter.</p>
-        </div>
-
-        <!-- Contact Section -->
-        <div class="footer-links">
-            <h4>Contact Us</h4>
-            <div class="links">
-                <a href="<------add-instagram------>">
-                    <img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000" width="30">
-                </a>
-                <a href="<------add-linkedin----->">
-                    <img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="30">
-                </a>
-                <a href="https://github.com/RAJIV81205">
-                    <img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="30">
-                </a>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>{Weather-Blast}</h2>
+                <p>Know the weather. Breathe better. Plan smarter.</p>
             </div>
+
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <div class="links">
+                    <a href="<------add-instagram------>">
+                        <img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000"
+                            width="30">
+                    </a>
+                    <a href="<------add-linkedin----->">
+                        <img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="30">
+                    </a>
+                    <a href="https://github.com/RAJIV81205">
+                        <img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="30">
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Useful Links</h4>
+                <a href="#home" onclick="showSection('home')">Home</a>
+                <a href="#news" onclick="showSection('news')">Weather News</a>
+                <a href="#settings" onclick="showSection('settings')">Settings</a>
+                <a href="#footer">Contact</a>
+            </div>
+
+            <div></div>
         </div>
 
-        <!-- Placeholder Column (can be replaced with links or left empty) -->
-        <div class="footer-links">
-            <h4>Useful Links</h4>
-            <a href="#home" onclick="showSection('home')">Home</a>
-            <a href="#news" onclick="showSection('news')">Weather News</a>
-            <a href="#settings" onclick="showSection('settings')">Settings</a>
-            <a href="#footer">Contact</a>
+        <div class="footer-bottom">
+            <p>© 2025 Weather-Blast. All rights reserved.</p>
+            <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
         </div>
-
-        <!-- Empty Column for symmetry (optional) -->
-        <div></div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>© 2025 Weather-Blast. All rights reserved.</p>
-        <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
-    </div>
-</footer>
-
+    </footer>
 
 
     <script src="script.js"></script>

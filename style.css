@@ -1,8 +1,7 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Itim&family=Khula:wght@300;400;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Headland+One&display=swap');
-
-
 
 * {
     margin: 0;
@@ -63,6 +62,7 @@ header {
     display: flex;
     gap: 15px;
     align-items: center;
+    justify-content: center; /* Corrected: Centers the nav links */
 }
 
 .nav-link {
@@ -122,7 +122,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
     margin-top: 10px;
     width: 100%;
 }
@@ -130,13 +130,13 @@ header {
 .search-buttons button:first-child {
     flex-grow: 1;
     width: auto;
-    margin-right: 10px; 
+    margin-right: 10px;
 }
 
 /* Style the refresh button with an icon */
 #refresh-button {
-    width: 40px; 
-    height: 40px; 
+    width: 40px;
+    height: 40px;
     padding: 0;
     font-size: 1.2em;
     display: flex;
@@ -149,12 +149,12 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 
-    margin-left: -15px; 
+    margin-left: -15px;
 }
 
 #refresh-button:hover {
     background-color: #5e9688;
-    transform: rotate(360deg) scale(1.1); 
+    transform: rotate(360deg) scale(1.1);
 }
 
 .card button {
@@ -193,6 +193,50 @@ header {
     align-items: center;
     gap: 10px;
 }
+
+/* --- NEW: Share Button Styles --- */
+#shareButton {
+    width: 40px; /* Changed to fixed size */
+    height: 40px; /* Changed to fixed size */
+    padding: 0; /* Removed padding */
+    font-size: 18px;
+    background-color: rgba(106, 156, 137, 1);
+    border: 2px solid rgba(22, 66, 60, 1);
+    border-radius: 50%; /* Changed to a circle */
+    color: white;
+    font-family: "Itim", cursive;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center icon inside the button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#shareButton:hover {
+    background-color: rgba(22, 66, 60, 1);
+    border-color: rgba(106, 156, 137, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+#shareButton i {
+    font-size: 1.1em;
+}
+
+/* Dark mode styling for the share button */
+body[style*="rgba(17, 34, 29, 0.7)"] #shareButton {
+    background-color: rgba(22, 66, 60, 1);
+    border-color: rgba(106, 156, 137, 1);
+    color: white;
+}
+body[style*="rgba(17, 34, 29, 0.7)"] #shareButton:hover {
+    background-color: rgba(106, 156, 137, 1);
+    border-color: white;
+    color: rgba(22, 66, 60, 1);
+}
+/* --- END NEW: Share Button Styles --- */
 
 /* News Section Styles */
 .news-container {
@@ -543,6 +587,7 @@ body[style*="rgba(17, 34, 29, 0.7)"] .add-favorite input::placeholder {
 }
 
 body[style*="rgba(17, 34, 29, 0.7)"] .add-favorite input:focus {
+    outline: none;
     border-color: rgba(106, 156, 137, 0.8);
     box-shadow: 0 0 0 3px rgba(106, 156, 137, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -553,8 +598,9 @@ body[style*="rgba(17, 34, 29, 0.7)"] .favorite-card {
 }
 
 body[style*="rgba(17, 34, 29, 0.7)"] .favorite-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     border-color: rgba(106, 156, 137, 0.6);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 body[style*="rgba(17, 34, 29, 0.7)"] .favorite-card .location-name {
@@ -1301,31 +1347,31 @@ input:checked + .slider:before {
 
 /* Scroll To Top Button */
 #backToTopBtn {
-  position: fixed;
-  bottom: 120px;
-  right: 10px;
-  width: 50px;
-  height: 50px;
-  background-color: #7baea1;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 1000;
+    position: fixed;
+    bottom: 120px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: #7baea1;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 #backToTopBtn i {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 #backToTopBtn:hover {
-  background-color: #5e9688;
-  transform: scale(1.1);
+    background-color: #5e9688;
+    transform: scale(1.1);
 }
 
 /* footer styling */
@@ -1355,7 +1401,7 @@ footer {
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
-    max-width: 1200px; /* FIXED: Now limits content width */
+    max-width: 1200px; 
     width: 100%;
     margin: 0 auto;
     gap: 2rem;
@@ -1381,7 +1427,7 @@ footer {
 
 /* === Contact Section === */
 .footer-contact {
-   
+    
     text-align: center;
 }
 

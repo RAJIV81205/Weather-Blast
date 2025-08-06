@@ -1,24 +1,20 @@
 // === API KEYS ===
 const apiKey = 'a9597b9143bd10ce791e1b80c44d2d50'; // OpenWeatherMap API key
-const geoAPI = '2783701aa79748f9b21e86f7ca361dd4'; // GeoApify API key
+const geoAPI = '2783701aa79748f9b21e86f7ca361dd3'; // GeoApify API key
 const opt = { timeStyle: 'short', hour12: true }; // Time formatting options
 
 let map; // Global map object
 
 // === NAVBAR FUNCTIONALITY ===
 function showSection(sectionName) {
-    // Hide all sections
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(section => section.classList.remove('active'));
     
-    // Get the original home content
     const originalHomeContent = document.getElementById('original-home-content');
     
     if (sectionName === 'home') {
-        // Show original home content, hide all other sections
         originalHomeContent.style.display = 'block';
     } else {
-        // Hide original home content and show selected section
         originalHomeContent.style.display = 'none';
         const targetSection = document.getElementById(sectionName + '-section');
         if (targetSection) {
@@ -26,7 +22,6 @@ function showSection(sectionName) {
         }
     }
     
-    // Update active nav link
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => link.classList.remove('active'));
     const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
@@ -34,7 +29,6 @@ function showSection(sectionName) {
         activeLink.classList.add('active');
     }
     
-    // Load content based on section
     if (sectionName === 'news') {
         loadWeatherNews();
     } else if (sectionName === 'alerts') {
@@ -54,7 +48,6 @@ async function loadWeatherNews() {
     newsGrid.innerHTML = '<div class="news-card"><h3>Loading weather news...</h3></div>';
     
     try {
-        // Simulated news data (replace with real API call)
         const newsData = [
             {
                 title: "Severe Thunderstorm Warning",
@@ -96,7 +89,6 @@ async function loadWeatherNews() {
 async function loadWeatherAlerts() {
     const alertsList = document.getElementById('alerts-list');
     
-    // Simulated alerts data
     const alertsData = [
         {
             type: "warning",
@@ -134,7 +126,6 @@ function filterAlerts(type) {
     filterBtns.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     
-    // Filter logic would go here
     console.log('Filtering alerts by:', type);
 }
 
@@ -142,20 +133,16 @@ function filterAlerts(type) {
 let weatherUpdateCount = 0;
 
 function updateFavoriteStats() {
-    // Total favorites
     const favoriteCards = document.querySelectorAll('.favorite-card');
-    // Exclude sample card if present
     const realCards = Array.from(favoriteCards).filter(card => !card.classList.contains('sample'));
     document.getElementById('total-favorites').textContent = realCards.length;
 
-    // Most recent favorite location name
     let recent = '--';
     if (realCards.length > 0) {
         recent = realCards[realCards.length - 1].querySelector('h4').textContent.trim();
     }
     document.getElementById('recent-favorite').textContent = recent;
 
-    // Weather updates
     document.getElementById('weather-updates').textContent = weatherUpdateCount;
 }
 
@@ -183,14 +170,12 @@ function addFavoriteLocation() {
         favoritesList.appendChild(favoriteCard);
         input.value = '';
         updateFavoriteStats();
-        // Load weather for the new favorite
         loadFavoriteWeather(location);
     }
 }
 
 function removeFavorite(location) {
     if (confirm(`Remove ${location} from favorites?`)) {
-        // Find and remove the favorite card
         const favoriteCards = document.querySelectorAll('.favorite-card');
         favoriteCards.forEach(card => {
             const locationName = card.querySelector('h4').textContent;
@@ -204,7 +189,6 @@ function removeFavorite(location) {
 
 function loadFavoriteWeather(location) {
     console.log('Loading weather for:', location);
-    // Switch to home section and search for this location
     showSection('home');
     document.getElementById('city-input').value = location;
     getWeatherByCity();
@@ -220,7 +204,6 @@ function scrollToTop() {
     });
 }
 
-// Show/hide back to top button based on scroll position
 window.addEventListener('scroll', function() {
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (window.pageYOffset > 300) {
@@ -232,7 +215,6 @@ window.addEventListener('scroll', function() {
 
 // === Initialize on page load ===
 document.addEventListener('DOMContentLoaded', function() {
-    // Show home section by default
     showSection('home');
     updateFavoriteStats();
 });
@@ -246,7 +228,7 @@ function isFahrenheitToggled() {
 // === INITIALIZE DEFAULT MAP ===
 function initMap() {
     map = new mappls.Map("map", {
-        center: [28.6138954, 77.2090057] // Default to New Delhi
+        center: [28.6138954, 77.2090057]
     });
 }
 window.onload = initMap;
@@ -261,7 +243,6 @@ function initMap1(data) {
         zoom: 10
     });
 
-    // Wait until map is ready to add marker
     map.addListener('load', () => {
         new mappls.Marker({
             map: map,
@@ -342,7 +323,7 @@ function fetchWeatherByCity(city) {
         })
         .then(data => {
             hideLoader();
-            getUvData(data);
+            displayWeather(data);
         })
         .catch(err => {
             hideLoader();
@@ -377,7 +358,7 @@ function fetchWeatherByCoordinates(lat, lon) {
         .then(res => res.json())
         .then(data => {
             hideLoader();
-            getUvData(data);
+            displayWeather(data);
             initMap1(data);
         })
         .catch(err => {
@@ -386,17 +367,8 @@ function fetchWeatherByCoordinates(lat, lon) {
         });
 }
 
-// === UV INDEX FUNCTIONALITY ===
-function getUvData(data){
-      const url = `https://api.openweathermap.org/data/2.5//uvi?lat=${data.coord.lat}&lon=${data.coord.lon}&appid=${apiKey}`;
-      fetch(url)
-      .then(res => res.json())
-      .then(uvdata => displayWeather(data,uvdata))
-}
-
-
 // === DISPLAY WEATHER DETAILS IN UI ===
-function displayWeather(data,uvdata) {
+function displayWeather(data) {
     const { temp, feels_like, humidity, pressure } = data.main;
     const visibility = data.visibility / 1000;
     const windSpeed = data.wind.speed;
@@ -409,17 +381,15 @@ function displayWeather(data,uvdata) {
     const { lat, lon } = data.coord;
 
     fetchPollution(lat, lon);
-    getWeatherForecast(lat, lon);
+    getWeatherForecast(lat, lon); 
 
     document.getElementById("weat").innerText = `Weather Information : ${city}`;
     document.getElementById("air").innerText = `Air Pollution : ${city}`;
 
-    // Store base data in dataset for unit conversion
     ["temp", "fl", "temp1", "fl1"].forEach(id => {
         document.getElementById(id).dataset.celsius = id.includes("fl") ? feels_like : temp;
     });
     
-    // Store wind speed and pressure data for unit conversion
     ["ws", "ws1"].forEach(id => {
         const element = document.getElementById(id);
         element.dataset.windMs = windSpeed;
@@ -430,23 +400,19 @@ function displayWeather(data,uvdata) {
         element.dataset.pressureHpa = pressure;
     });
 
-    // Apply current unit settings
     const settings = getSettings();
     const isCelsius = settings.tempUnit === 'celsius';
     updateTemperatureDisplay(isCelsius);
 
-    // Update UI (non-convertible data)
     ["wi", "wi1"].forEach(id => document.getElementById(id).innerText = weatherdes);
     ["date", "date1"].forEach(id => document.getElementById(id).innerText = date);
     ["city", "city1"].forEach(id => document.getElementById(id).innerText = city);
     ["humi", "humi1"].forEach(id => document.getElementById(id).innerText = `${humidity}%`);
-    ['bigUV','smallUV'].forEach(id => document.getElementById(id).innerText = `${uvdata.value}`);
     ["visi", "visi1"].forEach(id => document.getElementById(id).innerText = `${visibility} Km`);
     ["sr", "sr1"].forEach(id => document.getElementById(id).innerText = sunrise);
     ["ss", "ss1"].forEach(id => document.getElementById(id).innerText = sunset);
     ["cc", "cc1"].forEach(id => document.getElementById(id).innerText = country);
     
-    // Update units-based data
     ["press", "press1"].forEach(id => document.getElementById(id).innerText = convertPressure(pressure));
     ["ws", "ws1"].forEach(id => document.getElementById(id).innerText = convertWindSpeed(windSpeed));
 
@@ -486,7 +452,7 @@ function convertWindSpeed(speedMs, targetUnit = null) {
             return `${(speedMs * 2.237).toFixed(1)} mph`;
         case 'kmh':
             return `${(speedMs * 3.6).toFixed(1)} km/h`;
-        default: // ms
+        default:
             return `${speedMs.toFixed(1)} m/s`;
     }
 }
@@ -500,7 +466,7 @@ function convertPressure(pressureHpa, targetUnit = null) {
             return `${pressureHpa.toFixed(1)} mb`;
         case 'inhg':
             return `${(pressureHpa * 0.02953).toFixed(2)} inHg`;
-        default: // hpa
+        default:
             return `${pressureHpa.toFixed(1)} hPa`;
     }
 }
@@ -514,7 +480,6 @@ function updateTemperatureDisplay(forceCelsius = null) {
     const settings = getSettings();
     const isCelsius = forceCelsius !== null ? forceCelsius : (settings.tempUnit === 'celsius');
     
-    // Update the toggle switch to match settings
     const unitToggle = document.getElementById('unitToggle');
     if (unitToggle) {
         unitToggle.checked = !isCelsius;
@@ -529,7 +494,6 @@ function updateTemperatureDisplay(forceCelsius = null) {
         }
     });
     
-    // Update all temperature elements with data-celsius attribute
     const tempElements = document.querySelectorAll('[data-celsius]');
     tempElements.forEach(element => {
         const tempC = parseFloat(element.dataset.celsius);
@@ -538,13 +502,12 @@ function updateTemperatureDisplay(forceCelsius = null) {
         }
     });
     
-    // Refresh forecast with updated unit
     if (lastForecastData) {
         showWeatherForecast(lastForecastData);
     }
 }
 // === FETCH POLLUTION DATA ===
-function fetchPollution(lat, lon) { 
+function fetchPollution(lat, lon) {
     const pollurl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
     fetch(pollurl)
         .then(response => response.json())
@@ -576,12 +539,15 @@ function displayPollution(data) {
     });
 }
 
-// Forecast display with °C ⇄ °F toggle support
+// Save forecast data globally for reuse
+let lastForecastData = null;
+
+// === FORECAST & UV INDEX DATA ===
 function getWeatherForecast(lat, lon) {
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            lastForecastData = data;
             showWeatherForecast(data);
         })
         .catch(error => {
@@ -600,6 +566,9 @@ function showWeatherForecast(data) {
     const isCelsius = settings.tempUnit === 'celsius';
     const forecast = data.daily.slice(0, 8);
     const opt = { hour: '2-digit', minute: '2-digit' };
+    
+    const currentUVIndex = data.current.uvi;
+    ['bigUV','smallUV'].forEach(id => document.getElementById(id).innerText = `${currentUVIndex}`);
 
     const dates = forecast.map(day => `<th>${new Date(day.dt * 1000).toLocaleDateString()}</th>`).join("");
     const maxTemps = forecast.map(day => `<td>${convertTemp(day.temp.max, isCelsius)}</td>`).join("");
@@ -685,41 +654,21 @@ function updateTemperatureDisplay(isCelsius) {
         document.getElementById('fl').textContent = convertTemperature(feelsLikeTemp, useCelsius ? 'celsius' : 'fahrenheit');
     }
 
-    // Refresh forecast with updated unit
     if (lastForecastData) {
         showWeatherForecast(lastForecastData);
     }
 }
 
-// Save forecast data globally for reuse
-let lastForecastData = null;
-
-// Wrap fetch to save forecast
-function getWeatherForecast(lat, lon) {
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-            lastForecastData = data;
-            showWeatherForecast(data);
-        })
-        .catch(error => {
-            console.error('Error fetching Forecast', error);
-        });
-}
-
-// Temperature unit toggle listener
 const unitToggle = document.getElementById('unitToggle');
 if (unitToggle) {
     unitToggle.addEventListener('change', function () {
         const isCelsius = !this.checked;
-        // Update settings when toggle is used
         const settings = getSettings();
         settings.tempUnit = isCelsius ? 'celsius' : 'fahrenheit';
         localStorage.setItem('weatherBlastSettings', JSON.stringify(settings));
         
         updateTemperatureDisplay(isCelsius);
         
-        // Update settings UI if it exists
         const tempUnitSetting = document.getElementById('temp-unit-setting');
         if (tempUnitSetting) {
             tempUnitSetting.value = settings.tempUnit;
@@ -727,34 +676,29 @@ if (unitToggle) {
     });
 }
 
-// Initialize temperature display with saved settings
 document.addEventListener('DOMContentLoaded', function() {
     const settings = getSettings();
     const isCelsius = settings.tempUnit === 'celsius';
     
-    // Set toggle to match settings
     if (unitToggle) {
         unitToggle.checked = !isCelsius;
     }
     
-    // Apply initial temperature display
     updateTemperatureDisplay(isCelsius);
 });
 
-// Scroll to top button
 window.onscroll = function () {
-  const btn = document.getElementById("backToTopBtn");
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-    btn.style.display = "flex";
-  } else {
-    btn.style.display = "none";
-  }
+    const btn = document.getElementById("backToTopBtn");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
 };
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
 
 window.addEventListener("beforeunload", function () {
     window.scrollTo(0, 0);
@@ -768,15 +712,13 @@ function getWeatherByCity() {
         alert("PLEASE ENTER CITY NAME");
         return;
     }
-    // Store the city for potential refresh
     lastSearchQuery = city;
     showLoader();
     fetchWeatherByCity(city);
 }
 
-// Update existing getWeatherByLocation function
 function getWeatherByLocation() {
-    lastSearchQuery = 'current_location'; 
+    lastSearchQuery = 'current_location';
     showLoader();
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -796,16 +738,55 @@ function getWeatherByLocation() {
     }
 }
 
-// New function to handle the refresh button click
 function refreshWeatherData() {
     if (lastSearchQuery === 'current_location') {
-        // Re-fetch weather using geolocation
         getWeatherByLocation();
     } else if (lastSearchQuery) {
-        // Re-fetch weather for the last searched city
         fetchWeatherByCity(lastSearchQuery);
     } else {
-        // Handle case where no search has been performed yet
         alert("Please enter a location and search, or use your current location, before refreshing. 🔄");
+    }
+}
+
+// ==============================
+// === Share Button Functionality ===
+// ==============================
+
+const shareButton = document.getElementById('shareButton');
+if (shareButton) {
+    shareButton.addEventListener('click', shareWeather);
+}
+
+function shareWeather() {
+    if (navigator.share) {
+        const city = document.getElementById('city')?.innerText;
+        const temp = document.getElementById('temp')?.innerText;
+        const weatherInfo = document.getElementById('wi')?.innerText;
+
+        let shareText = "Check out the weather on Weather-Blast!";
+        
+        if (city && temp && weatherInfo && city !== 'City' && temp !== '0°C') {
+            shareText = `Current weather in ${city}: ${temp}, ${weatherInfo}. Check it out on Weather-Blast!`;
+        } else {
+            alert("No weather data to share yet. Please search for a location first.");
+            return;
+        }
+
+        // --- NEW: Changes to how the share data is sent ---
+        const pageUrl = window.location.href;
+        
+        // Combine the custom text and the URL into a single string
+        const combinedText = `${shareText} ${pageUrl}`;
+
+        // Share the combined text and a title, but no separate 'url' property
+        navigator.share({
+            title: 'Weather-Blast',
+            text: combinedText
+        })
+        .then(() => console.log('Successfully shared weather data'))
+        .catch((error) => console.error('Error sharing weather data:', error));
+    } else {
+        alert("Sharing is not supported on this browser. You can manually copy the URL to share.");
+        console.log('Web Share API not supported on this browser.');
     }
 }
