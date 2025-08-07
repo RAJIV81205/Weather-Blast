@@ -72,8 +72,8 @@ async function loadWeatherNews() {
                         ${news.time}
                     </span>
                     <button class="read-more-btn" onclick="readFullArticle('${news.title}', '${news.url || ''}')">
-                        <i class="fas fa-arrow-right"></i>
-                        Read More
+                    Read More
+                    <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             `;
@@ -90,7 +90,8 @@ async function loadWeatherNews() {
                 <h3>Oops! News Temporarily Unavailable</h3>
                 <p>We're having trouble loading the latest weather news. Please try again in a moment.</p>
                 <button class="retry-btn" onclick="loadWeatherNews()">
-                    <i class="fas fa-redo"></i> Try Again
+                Try Again
+                <i class="fas fa-redo"></i> 
                 </button>
             </div>
         `;
