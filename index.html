@@ -62,6 +62,10 @@
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
                     </a>
+                    <a href="#feedback" class="nav-link" onclick="showSection('feedback')">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                    </a>
                 </div>
                 <button id="dark-mode">☀️</button>
             </div>
@@ -220,6 +224,25 @@
                     </div>
                 </div>
             </div>
+        </section>
+        <section id="feedback-section" class="content-section">
+            <h2><i class="fas fa-comment-dots"></i> Feedback</h2>
+                <div class="feedback-container">
+                    <label for="rating">Rate your experience:</label>
+                    <select id="rating">
+                    <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ - Good</option>
+                    <option value="3">⭐⭐⭐ - Average</option>
+                    <option value="2">⭐⭐ - Poor</option>
+                    <option value="1">⭐ - Terrible</option>
+                    </select>
+
+                    <label for="comment">Your feedback:</label>
+                    <textarea id="comment" rows="4" placeholder="Write something..."></textarea>
+
+                    <button onclick="submitFeedback()">Submit Feedback</button>
+                    <p id="feedback-msg" style="margin-top: 10px; color: green;"></p>
+                </div>
         </section>
     </main>
 

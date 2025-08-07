@@ -1510,3 +1510,72 @@ footer {
         padding: 1rem;
     }
 }
+
+/* Feedback box */
+/* Feedback Section */
+.feedback-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: var(--card-bg, #f9f9f9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.feedback-container label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color, #333);
+}
+
+.feedback-container select,
+.feedback-container textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+  background-color: var(--input-bg, #fff);
+  color: var(--text-color, #000);
+  box-sizing: border-box;
+}
+
+.feedback-container select:focus,
+.feedback-container textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.feedback-container button {
+  padding: 12px 24px;
+  background-color: lightgreen;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedback-container button:hover {
+  background-color: lightgreen;
+}
+
+#feedback-msg {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+body.dark-mode {
+  --card-bg: #1f1f1f;
+  --text-color: #f0f0f0;
+  --input-bg: #2c2c2c;
+}

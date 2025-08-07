@@ -936,3 +936,29 @@ function refreshWeatherData() {
         alert("Please enter a location and search, or use your current location, before refreshing. 🔄");
     }
 }
+
+function submitFeedback(){
+    const rating = document.getElementById("rating").value;
+    const comment = document.getElementById("comment").value.trim();
+    const message = document.getElementById("feedback-msg");
+
+    if (!comment) {
+        message.style.color = "red";
+        message.innerText = "⚠️ Please write a comment before submitting.";
+    return;
+  }
+  const feedback = {
+    rating: parseInt(rating),
+    comment,
+    time: new Date().toLocaleString()
+  };
+
+  let allFeedback = JSON.parse(localStorage.getItem("weatherFeedback")) || [];
+  allFeedback.push(feedback);
+  localStorage.setItem("weatherFeedback", JSON.stringify(allFeedback));
+
+  document.getElementById("feedback-msg").innerText = "Thank you for your feedback!";
+  document.getElementById("comment").value = "";
+  document.getElementById("rating").value = "5";
+
+}
