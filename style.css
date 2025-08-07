@@ -823,6 +823,7 @@ input:checked + .toggle-slider:hover {
 }
 
 #dark-mode {
+    visibility: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -870,6 +871,25 @@ table,
 th,
 td {
     transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.icons-block{
+    background: linear-gradient(rgb(211, 245, 145), rgb(105, 151, 105));
+}
+
+.notes{
+    background: linear-gradient(to right, rgb(0, 183, 255), pink);
+    cursor: pointer;
+}
+
+.notes-txt{
+    filter: blur(5px);
+    color: black;
+    transition: filter 0.5s ease;
+}
+
+.notes:hover .notes-txt{
+    filter: none;
 }
 
 @media (max-width: 768px) {
