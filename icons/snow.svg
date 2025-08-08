@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="cloudGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D0D0D0;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="snowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F8FF;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Cloud -->
+  <g fill="url(#cloudGradient)">
+    <ellipse cx="50" cy="40" rx="15" ry="10">
+      <animate attributeName="cx" values="50;52;50" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="35" cy="45" rx="8" ry="5">
+      <animate attributeName="cx" values="35;37;35" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="65" cy="45" rx="8" ry="5">
+      <animate attributeName="cx" values="65;63;65" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+  
+  <!-- Snowflakes -->
+  <g fill="url(#snowGradient)">
+    <circle cx="40" cy="70" r="2">
+      <animate attributeName="cy" values="70;75;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="75" r="2">
+      <animate attributeName="cy" values="75;80;75" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="60" cy="70" r="2">
+      <animate attributeName="cy" values="70;75;70" dur="2s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    <circle cx="35" cy="80" r="1.5">
+      <animate attributeName="cy" values="80;85;80" dur="2.5s" repeatCount="indefinite" begin="0.3s"/>
+      <animate attributeName="opacity" values="1;0.6;1" dur="2.5s" repeatCount="indefinite" begin="0.3s"/>
+    </circle>
+    <circle cx="45" cy="85" r="1.5">
+      <animate attributeName="cy" values="85;90;85" dur="2.5s" repeatCount="indefinite" begin="0.8s"/>
+      <animate attributeName="opacity" values="1;0.6;1" dur="2.5s" repeatCount="indefinite" begin="0.8s"/>
+    </circle>
+    <circle cx="55" cy="80" r="1.5">
+      <animate attributeName="cy" values="80;85;80" dur="2.5s" repeatCount="indefinite" begin="1.3s"/>
+      <animate attributeName="opacity" values="1;0.6;1" dur="2.5s" repeatCount="indefinite" begin="1.3s"/>
+    </circle>
+    <circle cx="65" cy="85" r="1.5">
+      <animate attributeName="cy" values="85;90;85" dur="2.5s" repeatCount="indefinite" begin="1.8s"/>
+      <animate attributeName="opacity" values="1;0.6;1" dur="2.5s" repeatCount="indefinite" begin="1.8s"/>
+    </circle>
+  </g>
+</svg>

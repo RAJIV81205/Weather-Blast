@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="cloudGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D0D0D0;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="lightningGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFF00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="rainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Cloud -->
+  <g fill="url(#cloudGradient)">
+    <ellipse cx="50" cy="40" rx="15" ry="10">
+      <animate attributeName="cx" values="50;52;50" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="35" cy="45" rx="8" ry="5">
+      <animate attributeName="cx" values="35;37;35" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="65" cy="45" rx="8" ry="5">
+      <animate attributeName="cx" values="65;63;65" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+  
+  <!-- Lightning -->
+  <g stroke="url(#lightningGradient)" stroke-width="4" fill="none">
+    <polyline points="45,50 50,65 48,65 52,80">
+      <animate attributeName="stroke-width" values="4;6;4" dur="0.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.7;1" dur="0.5s" repeatCount="indefinite"/>
+    </polyline>
+  </g>
+  
+  <!-- Rain drops -->
+  <g stroke="url(#rainGradient)" stroke-width="2" fill="none">
+    <line x1="35" y1="60" x2="35" y2="80">
+      <animate attributeName="y2" values="80;85;80" dur="0.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="55" y1="60" x2="55" y2="80">
+      <animate attributeName="y2" values="80;85;80" dur="0.8s" repeatCount="indefinite" begin="0.2s"/>
+    </line>
+    <line x1="65" y1="60" x2="65" y2="80">
+      <animate attributeName="y2" values="80;85;80" dur="0.8s" repeatCount="indefinite" begin="0.4s"/>
+    </line>
+  </g>
+</svg>

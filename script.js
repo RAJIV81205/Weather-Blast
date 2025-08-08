@@ -5,6 +5,57 @@ const opt = { timeStyle: 'short', hour12: true }; // Time formatting options
 
 let map; // Global map object
 
+// === WEATHER ICON HELPER FUNCTION ===
+function getWeatherIcon(description) {
+    if (!description) return 'icons/default.svg';
+    
+    const weatherDescription = description.toLowerCase();
+    
+    // Clear sky conditions
+    if (weatherDescription.includes('clear sky') || weatherDescription.includes('sunny')) {
+        return 'icons/sunny.svg';
+    }
+    
+    // Cloud conditions
+    if (weatherDescription.includes('few clouds') || weatherDescription.includes('scattered clouds')) {
+        return 'icons/few_clouds.svg';
+    }
+    if (weatherDescription.includes('broken clouds') || weatherDescription.includes('overcast clouds') || weatherDescription.includes('cloudy')) {
+        return 'icons/cloudy.svg';
+    }
+    
+    // Rain conditions
+    if (weatherDescription.includes('light rain') || weatherDescription.includes('drizzle') || weatherDescription.includes('light intensity drizzle')) {
+        return 'icons/light_rain.svg';
+    }
+    if (weatherDescription.includes('moderate rain') || weatherDescription.includes('rain') || weatherDescription.includes('shower rain')) {
+        return 'icons/moderate_rain.svg';
+    }
+    if (weatherDescription.includes('heavy rain') || weatherDescription.includes('very heavy rain') || weatherDescription.includes('extreme rain')) {
+        return 'icons/heavy_rain.svg';
+    }
+    
+    // Thunderstorm conditions
+    if (weatherDescription.includes('thunderstorm') || weatherDescription.includes('thunder')) {
+        return 'icons/thunderstorm.svg';
+    }
+    
+    // Snow conditions
+    if (weatherDescription.includes('snow') || weatherDescription.includes('sleet') || weatherDescription.includes('freezing rain')) {
+        return 'icons/snow.svg';
+    }
+    
+    // Atmospheric conditions
+    if (weatherDescription.includes('mist') || weatherDescription.includes('fog') || weatherDescription.includes('haze') || 
+        weatherDescription.includes('smoke') || weatherDescription.includes('dust') || weatherDescription.includes('sand') || 
+        weatherDescription.includes('ash') || weatherDescription.includes('squall') || weatherDescription.includes('tornado')) {
+        return 'icons/mist.svg';
+    }
+    
+    // Default fallback
+    return 'icons/default.svg';
+}
+
 // === NAVBAR FUNCTIONALITY ===
 function showSection(sectionName) {
     // Hide all sections
@@ -642,7 +693,7 @@ function showWeatherForecast(data) {
     const sunrises = forecast.map(day => `<td>${new Date(day.sunrise * 1000).toLocaleTimeString('en-US', opt)}</td>`).join("");
     const sunsets = forecast.map(day => `<td>${new Date(day.sunset * 1000).toLocaleTimeString('en-US', opt)}</td>`).join("");
     const summaries = forecast.map(day => `<td>${day.weather[0].description}</td>`).join("");
-    const icons = forecast.map(day => `<td><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
+    const icons = forecast.map(day => `<td><img src="${getWeatherIcon(day.weather[0].description)}" alt="${day.weather[0].description}" style="width: 120px; height: 120px;"></td>`).join("");
     const noteForUser = forecast.map(day => `<td class = "notes"><p class="notes-txt">${giveNotes(day.weather[0].main)}</p></td>`).join("");
 
 

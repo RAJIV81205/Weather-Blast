@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="defaultGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Default weather symbol -->
+  <circle cx="50" cy="50" r="20" fill="url(#defaultGradient)" stroke="#808080" stroke-width="2">
+    <animate attributeName="r" values="20;22;20" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Question mark -->
+  <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#606060">
+    ?
+    <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+  </text>
+</svg>
