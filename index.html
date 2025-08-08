@@ -259,6 +259,20 @@
             </button>
         </div>
 
+        <div class="compass-container">
+            <h3>Wind Direction</h3>
+            <div class="compass">
+                <div class="compass-dial">
+                    <span class="compass-label compass-n">N</span>
+                    <span class="compass-label compass-e">E</span>
+                    <span class="compass-label compass-s">S</span>
+                    <span class="compass-label compass-w">W</span>
+                    <div class="compass-arrow" id="compass-arrow"></div>
+                </div>
+                <p id="compass-direction">Direction: -- (0°)</p>
+            </div>
+        </div>
+
         <table class="big">
             <tr>
                 <th>Date</th>
@@ -295,6 +309,219 @@
         <table class="small">
             <tr>
                 <th>Date</th>
+                <td id="date1">DD/MM/YY</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td id="city1">City</td>
+            </tr>
+            <tr>
+                <th>Temperature</th>
+                <td id="temp1" data-celsius="0">0°C</td>
+            </tr>
+            <tr>
+                <th>Feels Like</th>
+                <td id="fl1" data-celsius="0">0°C</td>
+            </tr>
+            <tr>
+                <th>Humidity</th>
+                <td id="humi1">0 %</td>
+            </tr>
+            <tr>
+                <th>UV Index</th>
+                <td id="smallUV">0</td>
+            </tr>
+            <tr>
+                <th>Pressure</th>
+                <td id="press1">0 atm</td>
+            </tr>
+            <tr>
+                <th>Visibility</th>
+                <td id="visi1">0 Km</td>
+            </tr>
+            <tr>
+                <th>Wind Speed</th>
+                <td id="ws1">0 m/s</td>
+            </tr>
+            <tr>
+                <th>Sunrise</th>
+                <td id="sr1">00:00</td>
+            </tr>
+            <tr>
+                <th>Sunset</th>
+                <td id="ss1">00:00</td>
+            </tr>
+            <tr>
+                <th>Country Code</th>
+                <td id="cc1">IN</td>
+            </tr>
+            <tr>
+                <th>Weather Info</th>
+                <td id="wi1">Info</td>
+            </tr>
+        </table>
+
+        <h2 id="forecast">7 days Weather Forecast</h2>
+        <div class="forecasttable">
+            <table id="forecast-table">
+            </table>
+        </div>
+
+        <h2 id="air">Air Pollution</h2>
+        <table class="big">
+            <tr>
+                <th>AQI</th>
+                <th>Carbon Monoxide</th>
+                <th>Nitrogen Monoxide</th>
+                <th>Nitrogen Dioxide</th>
+                <th>Ozone</th>
+                <th>Sulphur Dioxide</th>
+                <th>PM 2.5</th>
+                <th>PM 10</th>
+                <th>Ammonia</th>
+            </tr>
+            <tr>
+                <td id="aqi">-</td>
+                <td id="co">0.0 μg/m3</td>
+                <td id="no">0.0 μg/m3</td>
+                <td id="no2">0.0 μg/m3</td>
+                <td id="o3">0.0 μg/m3</td>
+                <td id="so2">0.0 μg/m3</td>
+                <td id="pm2.5">0.0 μg/m3</td>
+                <td id="pm10">0.0 μg/m3</td>
+                <td id="nh3">0.0 μg/m3</td>
+            </tr>
+        </table>
+
+        <table class="small">
+            <tr>
+                <th>AQI</th>
+                <td id="aqi1">-</td>
+            </tr>
+            <tr>
+                <th>Carbon Monoxide</th>
+                <td id="co1">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Nitrogen Monoxide</th>
+                <td id="no1">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Nitrogen Dioxide</th>
+                <td id="no21">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Ozone</th>
+                <td id="o31">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Sulphur Dioxide</th>
+                <td id="so21">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>PM 2.5</th>
+                <td id="pm2.51">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>PM 10</th>
+                <td id="pm101">0.0 μg/m3</td>
+            </tr>
+            <tr>
+                <th>Ammonia</th>
+                <td id="nh31">0.0 μg/m3</td>
+            </tr>
+        </table>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>{Weather-Blast}</h2>
+                <p>Know the weather. Breathe better. Plan smarter.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <div class="links">
+                    <a href="<------add-instagram------>">
+                        <img src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000"
+                            width="30">
+                    </a>
+                    <a href="<------add-linkedin----->">
+                        <img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" width="30">
+                    </a>
+                    <a href="https://github.com/RAJIV81205">
+                        <img src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000" width="30">
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4>Useful Links</h4>
+                <a href="#home" onclick="showSection('home')">Home</a>
+                <a href="#news" onclick="showSection('news')">Weather News</a>
+                <a href="#settings" onclick="showSection('settings')">Settings</a>
+                <a href="#footer">Contact</a>
+            </div>
+
+            <div></div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Weather-Blast. All rights reserved.</p>
+            <p>Developed and contributed by <strong>Rajiv Dubey</strong> and contributors</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/news.js"></script>
+    <script src="js/favorites.js"></script>
+    <script src="js/alert-panel.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/weather.js"></script>
+
+</body>
+
+</html>
+        <table class="big">
+            <tr>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Temperature</th>
+                <th>Feels Like</th>
+                <th>Humidity</th>
+                <th>UV Index</th>
+                <th>Pressure</th>
+                <th>Visibility</th>
+                <th>Wind Speed</th>
+                <th>Sunrise</th>
+                <th>Sunset</th>
+                <th>Country Code</th>
+                <th>Weather Info</th>
+            </tr>
+            <tr>
+                <td id="date">DD/MM/YY</td>
+                <td id="city">City</td>
+                <td id="temp" data-celsius="0">0°C</td>
+                <td id="fl" data-celsius="0">0°C</td>
+                <td id="humi">0 %</td>
+                <td id="bigUV">0</td>
+                <td id="press">0 atm</td>
+                <td id="visi">0 Km</td>
+                <td id="ws">0 m/s</td>
+                <td id="sr">00:00</td>
+                <td id="ss">00:00</td>
+                <td id="cc">IN</td>
+                <td id="wi">Info</td>
+            </tr>
+        </table>
+
+        <table class="small">
+            <tr>
+                <th>Date</th>
+%;}
                 <td id="date1">DD/MM/YY</td>
             </tr>
             <tr>

@@ -367,11 +367,53 @@ function fetchWeatherByCoordinates(lat, lon) {
         });
 }
 
+// === CONVERT DEGREES TO CARDINAL DIRECTION ===
+function degreesToCardinal(deg) {
+    const directions = [
+        { label: 'N', range: [348.75, 11.25] },
+        { label: 'NNE', range: [11.25, 33.75] },
+        { label: 'NE', range: [33.75, 56.25] },
+        { label: 'ENE', range: [56.25, 78.75] },
+        { label: 'E', range: [78.75, 101.25] },
+        { label: 'ESE', range: [101.25, 123.75] },
+        { label: 'SE', range: [123.75, 146.25] },
+        { label: 'SSE', range: [146.25, 168.75] },
+        { label: 'S', range: [168.75, 191.25] },
+        { label: 'SSW', range: [191.25, 213.75] },
+        { label: 'SW', range: [213.75, 236.25] },
+        { label: 'WSW', range: [236.25, 258.75] },
+        { label: 'W', range: [258.75, 281.25] },
+        { label: 'WNW', range: [281.25, 303.75] },
+        { label: 'NW', range: [303.75, 326.25] },
+        { label: 'NNW', range: [326.25, 348.75] }
+    ];
+    deg = deg % 360;
+    for (const dir of directions) {
+        const [min, max] = dir.range;
+        if (deg >= min && deg < max || (min > max && (deg >= min || deg < max))) {
+            return dir.label;
+        }
+    }
+    return 'N';
+}
+
+// === UPDATE COMPASS DISPLAY ===
+function updateCompass(windDeg) {
+    const arrow = document.getElementById('compass-arrow');
+    const directionLabel = document.getElementById('compass-direction');
+    if (arrow && directionLabel) {
+        arrow.style.transform = `rotate(${windDeg}deg)`;
+        const cardinal = degreesToCardinal(windDeg);
+        directionLabel.textContent = `Direction: ${cardinal} (${Math.round(windDeg)}°)`;
+    }
+}
+
 // === DISPLAY WEATHER DETAILS IN UI ===
 function displayWeather(data) {
     const { temp, feels_like, humidity, pressure } = data.main;
     const visibility = data.visibility / 1000;
     const windSpeed = data.wind.speed;
+    const windDeg = data.wind.deg;
     const date = new Date(data.dt * 1000).toLocaleDateString();
     const weatherdes = data.weather[0].main;
     const { country } = data.sys;
@@ -382,6 +424,8 @@ function displayWeather(data) {
 
     fetchPollution(lat, lon);
     getWeatherForecast(lat, lon); 
+
+    updateCompass(windDeg);
 
     document.getElementById("weat").innerText = `Weather Information : ${city}`;
     document.getElementById("air").innerText = `Air Pollution : ${city}`;
@@ -561,6 +605,41 @@ function convertTemp(temp, isCelsius = null) {
     return convertTemperature(temp, useCelsius ? 'celsius' : 'fahrenheit');
 }
 
+//Adding an object for notes 
+const notes = {
+    clear: ["Sun’s out, shades on! Don’t forget sunscreen 😎", "Perfect day for an ice cream or a long walk 🍦🚶‍♀️", "Clear skies and good vibes ahead 🌞✨"],
+    clouds: ["Clouds are having a meeting up there! ☁️", "Still a great day to be outdoors — maybe a light jacket?", "Sky's wearing a gray sweater today! 🌫️"],
+    rain: ["Don’t forget your umbrella — it's nature’s splash party ☔💃", "Perfect day for pakoras and Netflix 🍲🎬", "Tiny droplets, big cozy vibes!"],
+    snow: ["Snowball fights or hot cocoa? Or both? ☕❄️", "Snowflakes are saying hello! ❄️👋", "Winter wonderland loading... ⛄❄️"],
+    thunderstorm: ["⚡ Dramatic skies incoming! Stay safe and unplug if needed.", "A good day to stay in and watch the show from your window 🎭", "It's Thor's bowling night! ⚡🎳"],
+    atmosphere: ["Dreamy, soft-focus day! 🌫️✨", "It’s one of those days… where the air's got secrets. Stay curious, stay indoors if needed! 🔮🌪️", "Atmospheric trickery afoot! The skies are casting illusions — step carefully, seer of weather 👁️️🗨️🌫️"]
+}
+
+//categories grouping together weather desc 
+const weatherKeywords = {
+    clear: ['clear', 'sunny'], clouds: ['cloud', 'overcast'], rain: ['rain', 'drizzle', 'shower'], snow: ["snow", "sleet"], thunderstorm: ['thunderstorm', 'thunder'], atmosphere: ['mist', 'fog', 'haze', 'smoke', 'dust', 'sand', 'tornado']
+}
+
+//assign category to weather desc info
+function extractWeatherInfo(weatherMain = ''){
+    const main = weatherMain.toLowerCase();
+    for(const [category, keywords] of Object.entries(weatherKeywords)){
+        if(keywords.some(keyword=>main.includes(keyword))){
+            return category;
+        }
+    }
+    return 'clear';
+}
+
+//function to give note randomly
+function giveNotes(weatherMain = ''){
+    const category = extractWeatherInfo(weatherMain);
+    const note = notes[category];
+
+    const randomIdx = Math.floor(Math.random()*note.length);
+    return note[randomIdx];
+}
+
 function showWeatherForecast(data) {
     const settings = getSettings();
     const isCelsius = settings.tempUnit === 'celsius';
@@ -577,6 +656,8 @@ function showWeatherForecast(data) {
     const sunsets = forecast.map(day => `<td>${new Date(day.sunset * 1000).toLocaleTimeString('en-US', opt)}</td>`).join("");
     const summaries = forecast.map(day => `<td>${day.weather[0].description}</td>`).join("");
     const icons = forecast.map(day => `<td><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
+    const noteForUser = forecast.map(day => `<td class = "notes"><p class="notes-txt">${giveNotes(day.weather[0].main)}</p></td>`).join("");
+
 
     document.getElementById("forecast").style.display = "block";
     document.getElementById("forecast-table").innerHTML = `
@@ -586,6 +667,7 @@ function showWeatherForecast(data) {
         <tr><th>Sunrise</th>${sunrises}</tr>
         <tr><th>Sunset</th>${sunsets}</tr>
         <tr><th>Summary</th>${summaries}</tr>
+        <tr><th>Something for you!<br>(hover to unlock)</th>${noteForUser}</tr>
         <tr><th>Icon</th>${icons}</tr>
     `;
 
@@ -600,6 +682,11 @@ function showWeatherForecast(data) {
             el.style.border = "1px solid rgb(233, 239, 236)";
         });
     }
+
+    console.log("weather1 = ", data.daily[0].weather[0].main);  //just for debug purpose
+
+    applyWeatherTheme(extractWeatherInfo(data.daily[0].weather[0].main));
+
 }
 
 // Dark-mode toggle
@@ -624,12 +711,103 @@ function changedisplay() {
         darkbtn.textContent = "☀️";
         document.querySelectorAll("table, th, td").forEach(el => {
             el.style.border = "1px solid rgba(22, 66, 60, 1)";
-            el.style.color = "rgba(22, 66, 60, 1)";
+            el.style.color = "black";
         });
         toggle = 1;
     }
 }
 darkbtn.addEventListener('click', changedisplay);
+
+//-------------------theme changer
+
+// Simple Weather-Based Themes
+const weatherThemes = {
+    clear: {
+        background: "url('images/clearsky.gif') center / cover",
+        filter: "blur(10px)",
+        thColor: "#ff9a27ff",
+        thTxtColor: "white",
+        textColor: "#8B4513",
+        cardBg: "rgba(253, 255, 157, 0.5)"
+    },
+    rain: {
+        background: "url('images/rain1.gif')",
+        filter: "blur(0px)",
+        thColor: "rgba(70, 131, 180, 1)",
+        thTxtColor: "white",
+        textColor: "black",
+        cardBg: "rgba(70, 130, 180, 0.3)"
+    },
+    snow: {
+        background: "url('images/snowy.gif') center / cover",
+        filter: "blur(3px)",
+        thColor: "#191970c7",
+        thTxtColor: "white",
+        textColor: "#191970",
+        cardBg: "rgba(255, 255, 255, 0.9)"
+    },
+    clouds: {
+        background: "url('images/clouds.jpg') center / cover",
+        filter: "blur(5px)",
+        thColor: "rgba(151, 151, 151, 1)",
+        thTxtColor: "white",
+        textColor: "black",
+        cardBg: "rgba(214, 213, 213, 0.32)"
+    },
+    thunderstorm: {
+        background: "url('images/thunder.gif') center / cover",
+        filter: "blur(5px)",
+        thColor: "rgba(76, 0, 130, 1)",
+        thTxtColor: "white",
+        textColor: "#FFD700",
+        cardBg: "rgba(75, 0, 130, 0.4)"
+    },
+    atmosphere: {
+        background: "url('images/clearsky.gif') center / cover",
+        filter: "blur(5px)",
+        thColor: "rgba(255, 255, 190, 1)",
+        thTxtColor: "white",
+        textColor: "black",
+        cardBg: "rgba(245, 245, 220, 0.8)"
+    }
+};
+
+function applyWeatherTheme(weatherType) {
+    const theme = weatherThemes[weatherType] || weatherThemes.clear;
+    
+    // Apply background
+    document.body.style.background = theme.background;
+    document.body.style.backdropFilter = theme.filter;
+    document.body.style.color = theme.textColor;
+    
+    // Apply to cards and tables
+    document.querySelectorAll('.card, table, td').forEach(el => {
+        el.style.background = theme.cardBg;
+        el.style.color = theme.textColor;
+        el.style.border = `1px solid ${theme.textColor}`;
+    });
+    document.querySelectorAll('th').forEach(el => {
+        el.style.background = theme.thColor;
+        el.style.color = theme.thTxtColor;
+        el.style.border = `1px solid ${theme.textColor}`;
+    });
+    
+    // Apply to buttons (except theme control buttons)
+    document.querySelectorAll('button:not(#dark-mode):not(#theme)').forEach(btn => {
+        btn.style.background = theme.textColor;
+        btn.style.color = theme.background.split(' ')[0].replace('linear-gradient(to right, ', '');
+    });
+
+    // Apply to compass container
+    document.querySelectorAll('.compass-container, .compass-dial, .compass-arrow').forEach(el => {
+        el.style.background = theme.cardBg;
+        el.style.color = theme.textColor;
+        el.style.border = `1px solid ${theme.textColor}`;
+    });
+}
+
+//---------------------------------
+
 
 // Temperature toggle listener
 function updateTemperatureDisplay(isCelsius) {
@@ -772,13 +950,10 @@ function shareWeather() {
             return;
         }
 
-        // --- NEW: Changes to how the share data is sent ---
-        const pageUrl = "https://melodic-sprite-a3fb63.netlify.app/";
-
-        // Combine the custom text and the URL into a single string
+        const pageUrl = window.location.href;
+        
         const combinedText = `${shareText} ${pageUrl}`;
 
-        // Share the combined text and a title, but no separate 'url' property
         navigator.share({
             title: 'Weather-Blast',
             text: combinedText

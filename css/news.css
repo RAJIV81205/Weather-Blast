@@ -305,22 +305,41 @@
     margin-bottom: 25px;
 }
 
-.retry-btn {
-    background: linear-gradient(135deg, 
-        rgba(106, 156, 137, 0.9) 0%, 
-        rgba(106, 156, 137, 1) 100%);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 15px rgba(106, 156, 137, 0.3);
+.read-more-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background: linear-gradient(135deg, #6a9c89, #5b8d7a);
+  color: #fff !important;
+  font-family: 'Segoe UI', sans-serif !important;
+  font-size: 0.9em;
+  font-weight: 600;
+
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.read-more-btn i {
+  font-size: 1em;
+  color: #fff !important;
+  transition: transform 0.3s ease;
+}
+
+.read-more-btn:hover {
+  background: linear-gradient(135deg, #5b8d7a, #4e7c6c);
+  transform: translateY(-2px);
+}
+
+.read-more-btn:hover i {
+  transform: translateX(4px);
 }
 
 .retry-btn:hover {
@@ -342,21 +361,26 @@
 }
 
 .pagination-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(106, 156, 137, 0.3);
-    color: rgba(22, 66, 60, 0.8);
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-    font-size: 0.9em;
-    min-width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 14px;
+  min-width: 44px;
+  height: 38px;
+
+  font-size: 0.85em;
+  font-weight: 600;
+  color: rgba(22, 66, 60, 0.85);
+
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(106, 156, 137, 0.3);
+  border-radius: 10px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 6px;
 }
 
 .pagination-btn:hover:not(.disabled) {
