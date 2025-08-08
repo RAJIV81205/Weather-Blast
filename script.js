@@ -4,6 +4,82 @@ const geoAPI = '2783701aa79748f9b21e86f7ca361dd4'; // GeoApify API key
 const opt = { timeStyle: 'short', hour12: true }; // Time formatting options
 
 let map; // Global map object
+let lastForecastData = null; // Store forecast data globally
+let lastSearchQuery = ''; // Store last search query
+
+// === VOICE ASSISTANT FUNCTIONALITY ===
+function speakWeather(data) {
+    const settings = getSettings();
+    const isCelsius = settings.tempUnit === 'celsius';
+    const city = data.name || 'the selected location';
+    const temp = convertTemperature(data.main.temp, isCelsius ? 'celsius' : 'fahrenheit');
+    const weatherDesc = data.weather[0].description;
+    const humidity = data.main.humidity;
+    const windSpeed = convertWindSpeed(data.wind.speed, settings.windUnit);
+
+    // Generate weather summary
+    const summary = `The weather in ${city} is ${weatherDesc} with a temperature of ${temp}. Humidity is ${humidity} percent, and wind speed is ${windSpeed}.`;
+
+    // Use Web Speech API
+    const utterance = new SpeechSynthesisUtterance(summary);
+    utterance.lang = document.documentElement.lang || 'en-US'; // Match app's language (default to English)
+    utterance.rate = 1; // Normal speed
+    utterance.pitch = 1; // Normal pitch
+    window.speechSynthesis.speak(utterance);
+}
+
+// === ADD SPEAK BUTTON DYNAMICALLY ===
+function addSpeakButton() {
+    const searchButtons = document.querySelector('.search-buttons');
+    if (!searchButtons) return;
+
+    // Check if button already exists to avoid duplicates
+    if (!document.getElementById('speak-weather-button')) {
+        const speakButton = document.createElement('button');
+        speakButton.id = 'speak-weather-button';
+        speakButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+        speakButton.title = 'Speak Weather';
+        speakButton.style.width = '40px';
+        speakButton.style.height = '40px';
+        speakButton.style.padding = '0';
+        speakButton.style.fontSize = '1.2em';
+        speakButton.style.display = 'flex';
+        speakButton.style.justifyContent = 'center';
+        speakButton.style.alignItems = 'center';
+        speakButton.style.backgroundColor = 'rgba(106, 156, 137, 1)';
+        speakButton.style.color = 'white';
+        speakButton.style.border = '1px solid rgba(22, 66, 60, 1)';
+        speakButton.style.borderRadius = '50%';
+        speakButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+        speakButton.style.transition = 'all 0.3s ease';
+        speakButton.style.marginLeft = '10px';
+
+        // Add hover effect
+        speakButton.addEventListener('mouseover', () => {
+            speakButton.style.backgroundColor = '#5e9688';
+            speakButton.style.transform = 'scale(1.1)';
+        });
+        speakButton.addEventListener('mouseout', () => {
+            speakButton.style.backgroundColor = 'rgba(106, 156, 137, 1)';
+            speakButton.style.transform = 'scale(1)';
+        });
+
+        // Add click event to trigger speech
+        speakButton.addEventListener('click', () => {
+            // Use the last fetched weather data
+            if (lastWeatherData) {
+                speakWeather(lastWeatherData);
+            } else {
+                alert('Please fetch weather data first.');
+            }
+        });
+
+        searchButtons.appendChild(speakButton);
+    }
+}
+
+// Store last weather data globally
+let lastWeatherData = null;
 
 // === NAVBAR FUNCTIONALITY ===
 function showSection(sectionName) {
@@ -235,6 +311,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show home section by default
     showSection('home');
     updateFavoriteStats();
+    // Add speak button dynamically
+    addSpeakButton();
 });
 
 // === Check Toggle State ===
@@ -327,7 +405,12 @@ function hideLoader() {
 // === FETCH WEATHER FOR CITY ===
 function getWeatherByCity() {
     const city = document.getElementById("city-input").value;
-    if (!city) return alert("PLEASE ENTER CITY NAME");
+    if (!city) {
+        alert("PLEASE ENTER CITY NAME");
+        return;
+    }
+    // Store the city for potential refresh
+    lastSearchQuery = city;
     showLoader();
     fetchWeatherByCity(city);
 }
@@ -342,6 +425,7 @@ function fetchWeatherByCity(city) {
         })
         .then(data => {
             hideLoader();
+            lastWeatherData = data; // Store weather data
             getUvData(data);
         })
         .catch(err => {
@@ -377,6 +461,7 @@ function fetchWeatherByCoordinates(lat, lon) {
         .then(res => res.json())
         .then(data => {
             hideLoader();
+            lastWeatherData = data; // Store weather data
             getUvData(data);
             initMap1(data);
         })
@@ -388,10 +473,10 @@ function fetchWeatherByCoordinates(lat, lon) {
 
 // === UV INDEX FUNCTIONALITY ===
 function getUvData(data){
-      const url = `https://api.openweathermap.org/data/2.5//uvi?lat=${data.coord.lat}&lon=${data.coord.lon}&appid=${apiKey}`;
-      fetch(url)
-      .then(res => res.json())
-      .then(uvdata => displayWeather(data,uvdata))
+    const url = `https://api.openweathermap.org/data/2.5/uvi?lat=${data.coord.lat}&lon=${data.coord.lon}&appid=${apiKey}`;
+    fetch(url)
+        .then(res => res.json())
+        .then(uvdata => displayWeather(data, uvdata))
 }
 
 // === CONVERT DEGREES TO CARDINAL DIRECTION ===
@@ -555,14 +640,14 @@ function celsiusToFahrenheit(c) { return (c * 9 / 5) + 32; }
 function fahrenheitToCelsius(f) { return (f - 32) * 5 / 9; }
 
 // === TOGGLE CELSIUS/FAHRENHEIT DISPLAY ===
-function updateTemperatureDisplay(forceCelsius = null) {
+function updateTemperatureDisplay(isCelsius = null) {
     const settings = getSettings();
-    const isCelsius = forceCelsius !== null ? forceCelsius : (settings.tempUnit === 'celsius');
+    const useCelsius = isCelsius !== null ? isCelsius : (settings.tempUnit === 'celsius');
     
     // Update the toggle switch to match settings
     const unitToggle = document.getElementById('unitToggle');
     if (unitToggle) {
-        unitToggle.checked = !isCelsius;
+        unitToggle.checked = !useCelsius;
     }
     
     const elements = ["temp", "fl", "temp1", "fl1"];
@@ -570,7 +655,7 @@ function updateTemperatureDisplay(forceCelsius = null) {
         const el = document.getElementById(id);
         if (el && el.dataset.celsius) {
             const c = parseFloat(el.dataset.celsius);
-            el.innerText = convertTemperature(c, isCelsius ? 'celsius' : 'fahrenheit');
+            el.innerText = convertTemperature(c, useCelsius ? 'celsius' : 'fahrenheit');
         }
     });
     
@@ -579,7 +664,7 @@ function updateTemperatureDisplay(forceCelsius = null) {
     tempElements.forEach(element => {
         const tempC = parseFloat(element.dataset.celsius);
         if (!isNaN(tempC)) {
-            element.textContent = convertTemperature(tempC, isCelsius ? 'celsius' : 'fahrenheit');
+            element.textContent = convertTemperature(tempC, useCelsius ? 'celsius' : 'fahrenheit');
         }
     });
     
@@ -588,6 +673,7 @@ function updateTemperatureDisplay(forceCelsius = null) {
         showWeatherForecast(lastForecastData);
     }
 }
+
 // === FETCH POLLUTION DATA ===
 function fetchPollution(lat, lon) { 
     const pollurl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -626,7 +712,7 @@ function getWeatherForecast(lat, lon) {
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            lastForecastData = data;
             showWeatherForecast(data);
         })
         .catch(error => {
@@ -718,7 +804,6 @@ function showWeatherForecast(data) {
     console.log("weather1 = ", data.daily[0].weather[0].main);  //just for debug purpose
 
     applyWeatherTheme(extractWeatherInfo(data.daily[0].weather[0].main));
-
 }
 
 // Dark-mode toggle
@@ -825,10 +910,16 @@ function applyWeatherTheme(weatherType) {
     });
     
     // Apply to buttons (except theme control buttons)
-    document.querySelectorAll('button:not(#dark-mode):not(#theme)').forEach(btn => {
+    document.querySelectorAll('button:not(#dark-mode):not(#theme):not(#speak-weather-button)').forEach(btn => {
         btn.style.background = theme.textColor;
         btn.style.color = theme.background.split(' ')[0].replace('linear-gradient(to right, ', '');
     });
+    // Apply styles to speak button
+    const speakButton = document.getElementById('speak-weather-button');
+    if (speakButton) {
+        speakButton.style.background = theme.textColor;
+        speakButton.style.color = theme.background.split(' ')[0].replace('linear-gradient(to right, ', '');
+    }
 
     // Apply to compass container
     document.querySelectorAll('.compass-container, .compass-dial, .compass-arrow').forEach(el => {
@@ -837,9 +928,6 @@ function applyWeatherTheme(weatherType) {
         el.style.border = `1px solid ${theme.textColor}`;
     });
 }
-
-//---------------------------------
-
 
 // Temperature toggle listener
 function updateTemperatureDisplay(isCelsius) {
@@ -868,22 +956,6 @@ function updateTemperatureDisplay(isCelsius) {
     if (lastForecastData) {
         showWeatherForecast(lastForecastData);
     }
-}
-
-// Save forecast data globally for reuse
-let lastForecastData = null;
-
-// Wrap fetch to save forecast
-function getWeatherForecast(lat, lon) {
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-            lastForecastData = data;
-            showWeatherForecast(data);
-        })
-        .catch(error => {
-            console.error('Error fetching Forecast', error);
-        });
 }
 
 // Temperature unit toggle listener
@@ -922,38 +994,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Scroll to top button
 window.onscroll = function () {
-  const btn = document.getElementById("backToTopBtn");
-  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-    btn.style.display = "flex";
-  } else {
-    btn.style.display = "none";
-  }
+    const btn = document.getElementById("backToTopBtn");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
 };
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
 
 window.addEventListener("beforeunload", function () {
     window.scrollTo(0, 0);
 });
 
-let lastSearchQuery = '';
-
-function getWeatherByCity() {
-    const city = document.getElementById("city-input").value;
-    if (!city) {
-        alert("PLEASE ENTER CITY NAME");
-        return;
-    }
-    // Store the city for potential refresh
-    lastSearchQuery = city;
-    showLoader();
-    fetchWeatherByCity(city);
-}
-
-// Update existing getWeatherByLocation function
 function getWeatherByLocation() {
     lastSearchQuery = 'current_location'; 
     showLoader();
