@@ -773,8 +773,8 @@ function shareWeather() {
         }
 
         // --- NEW: Changes to how the share data is sent ---
-        const pageUrl = window.location.href;
-        
+        const pageUrl = "https://melodic-sprite-a3fb63.netlify.app/";
+
         // Combine the custom text and the URL into a single string
         const combinedText = `${shareText} ${pageUrl}`;
 
