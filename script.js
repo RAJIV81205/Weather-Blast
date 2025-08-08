@@ -394,12 +394,54 @@ function getUvData(data){
       .then(uvdata => displayWeather(data,uvdata))
 }
 
+// === CONVERT DEGREES TO CARDINAL DIRECTION ===
+function degreesToCardinal(deg) {
+    const directions = [
+        { label: 'N', range: [348.75, 11.25] },
+        { label: 'NNE', range: [11.25, 33.75] },
+        { label: 'NE', range: [33.75, 56.25] },
+        { label: 'ENE', range: [56.25, 78.75] },
+        { label: 'E', range: [78.75, 101.25] },
+        { label: 'ESE', range: [101.25, 123.75] },
+        { label: 'SE', range: [123.75, 146.25] },
+        { label: 'SSE', range: [146.25, 168.75] },
+        { label: 'S', range: [168.75, 191.25] },
+        { label: 'SSW', range: [191.25, 213.75] },
+        { label: 'SW', range: [213.75, 236.25] },
+        { label: 'WSW', range: [236.25, 258.75] },
+        { label: 'W', range: [258.75, 281.25] },
+        { label: 'WNW', range: [281.25, 303.75] },
+        { label: 'NW', range: [303.75, 326.25] },
+        { label: 'NNW', range: [326.25, 348.75] }
+    ];
+    deg = deg % 360;
+    for (const dir of directions) {
+        const [min, max] = dir.range;
+        if (deg >= min && deg < max || (min > max && (deg >= min || deg < max))) {
+            return dir.label;
+        }
+    }
+    return 'N';
+}
+
+// === UPDATE COMPASS DISPLAY ===
+function updateCompass(windDeg) {
+    const arrow = document.getElementById('compass-arrow');
+    const directionLabel = document.getElementById('compass-direction');
+    if (arrow && directionLabel) {
+        // Rotate arrow to point where wind is coming from (opposite of wind direction)
+        arrow.style.transform = `rotate(${windDeg}deg)`;
+        const cardinal = degreesToCardinal(windDeg);
+        directionLabel.textContent = `Direction: ${cardinal} (${Math.round(windDeg)}°)`;
+    }
+}
 
 // === DISPLAY WEATHER DETAILS IN UI ===
-function displayWeather(data,uvdata) {
+function displayWeather(data, uvdata) {
     const { temp, feels_like, humidity, pressure } = data.main;
     const visibility = data.visibility / 1000;
     const windSpeed = data.wind.speed;
+    const windDeg = data.wind.deg; // Get wind direction in degrees
     const date = new Date(data.dt * 1000).toLocaleDateString();
     const weatherdes = data.weather[0].main;
     const { country } = data.sys;
@@ -410,6 +452,9 @@ function displayWeather(data,uvdata) {
 
     fetchPollution(lat, lon);
     getWeatherForecast(lat, lon);
+
+    // Update compass with wind direction
+    updateCompass(windDeg);
 
     document.getElementById("weat").innerText = `Weather Information : ${city}`;
     document.getElementById("air").innerText = `Air Pollution : ${city}`;
@@ -783,6 +828,13 @@ function applyWeatherTheme(weatherType) {
     document.querySelectorAll('button:not(#dark-mode):not(#theme)').forEach(btn => {
         btn.style.background = theme.textColor;
         btn.style.color = theme.background.split(' ')[0].replace('linear-gradient(to right, ', '');
+    });
+
+    // Apply to compass container
+    document.querySelectorAll('.compass-container, .compass-dial, .compass-arrow').forEach(el => {
+        el.style.background = theme.cardBg;
+        el.style.color = theme.textColor;
+        el.style.border = `1px solid ${theme.textColor}`;
     });
 }
 
