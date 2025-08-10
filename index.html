@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
@@ -502,7 +503,23 @@
     <script src="js/alert-panel.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/weather.js"></script>
+<!-- Music Widget Floating Button -->
+<div id="musicWidget">
+    <button id="musicToggleBtn">🎵</button>
+    <div id="musicPopup">
+        <h3>Weather & Music</h3>
+        <input type="text" id="musicCityInput" placeholder="Enter city name">
+        <button id="getMusicBtn">Get Music</button>
+        <p id="weatherInfo"></p>
+        <div id="musicPlayer"></div>
+    </div>
+</div>
+
+<!-- Link CSS and JS -->
+<link rel="stylesheet" href="css/music-widget.css">
+<script src="js/music-widget.js"></script>
+
+
 
 </body>
-
 </html>
