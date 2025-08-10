@@ -1,0 +1,78 @@
+/* Floating Button */
+#musicWidget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: "Fira Code",monospace ;
+}
+
+#musicToggleBtn {
+    background-color: #6a9c89b3;
+    color: #e0e5e1b3;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: 0.3s ease;
+}
+
+#musicToggleBtn:hover {
+    background-color: #6a9c89b3;
+}
+
+/* Popup Box */
+#musicPopup {
+    display: none;
+    background: #e0e5e1b3;
+    border-radius: 10px;
+    padding: 15px;
+    width: 250px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+}
+
+#musicPopup h3 {
+    margin-top: 0;
+    font-size: 16px;
+    text-align: center;
+    color: #333;
+}
+
+#musicPopup input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#musicPopup button {
+    width: 100%;
+    padding: 8px;
+    background-color: #6a9c89b3;
+    color: #e0e5e1b3;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#musicPopup button:hover {
+    background-color: #46876d;
+}
+
+#musicPlayer {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#musicPlayer iframe {
+    border-radius: 6px;
+    width: 100%;
+    height: 150px;
+}
