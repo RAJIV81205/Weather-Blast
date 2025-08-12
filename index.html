@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/favorites.css">
     <link rel="stylesheet" href="css/alert-panel.css">
     <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/contact.css">
     <script
         src="https://apis.mappls.com/advancedmaps/api/a9ba6e316849b4c62fe0c23d2ab10945/map_sdk?layer=raster&v=3.0&callback=initMap"
         defer async></script>
@@ -22,6 +23,8 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -62,6 +65,11 @@
                     <a href="#settings" class="nav-link" onclick="showSection('settings')">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
+                    </a>
+                    <!-- Adding a contact section -->
+                    <a href="#contact" class="nav-link" onclick="showSection('contact')">
+                        <i class="fa-solid fa-address-book"></i>                        
+                        <span>Contact</span>
                     </a>
                 </div>
                 <button id="dark-mode">☀️</button>
@@ -222,6 +230,36 @@
                 </div>
             </div>
         </section>
+
+        <!-- Contact Section -->
+        <section id="contact-section" class="content-section">
+            <h2><i class="fa-solid fa-address-book"></i> Contact Us</h2>
+            <div class="contact-container">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name :)" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your mail :)" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa-solid fa-message"></i>
+                        <textarea class="form-control" id="message" placeholder="Write your message !" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-send">Send Message</button>
+                    </div>
+                    <div id="msg" class="msg"></div>
+
+                </form>                
+                    
+                
+                
+            </div>
+        </section>
+
     </main>
 
     <!-- Original Home Page Content (Always Visible) -->
@@ -480,7 +518,7 @@
             <a href="#home" onclick="showSection('home')">Home</a>
             <a href="#news" onclick="showSection('news')">Weather News</a>
             <a href="#settings" onclick="showSection('settings')">Settings</a>
-            <a href="#footer">Contact</a>
+            <a href="#footer" onclick="showSection('contact')">Contact</a>
         </div>
 
         <!-- Empty Column for symmetry (optional) -->
@@ -503,6 +541,7 @@
     <script src="js/alert-panel.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/weather.js"></script>
+    <script src="js/contact.js"></script>
 <!-- Music Widget Floating Button -->
 <div id="musicWidget">
     <button id="musicToggleBtn">🎵</button>
