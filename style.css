@@ -1611,3 +1611,23 @@ footer {
     color: rgba(22, 66, 60, 1);
     margin-top: 15px;
 }
+.navbar-brand h1 {
+    font-size: 2rem; /* default for desktops */
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Tablet view */
+@media (max-width: 768px) {
+    .navbar-brand h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile view */
+@media (max-width: 480px) {
+    .navbar-brand h1 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+}
