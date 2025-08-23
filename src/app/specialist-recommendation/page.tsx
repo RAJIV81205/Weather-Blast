@@ -335,24 +335,25 @@ export default function SpecialistRecommendationPage() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button
-                  onClick={getRecommendations}
-                  disabled={isLoading || Object.keys(fieldErrors).some(key => fieldErrors[key])}
-                  className="flex-1"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Getting Recommendations...
-                    </>
-                  ) : (
-                    'Get Specialist Recommendations'
-                  )}
-                </Button>
-                <Button variant="outline" onClick={clearForm}>
-                  Clear
-                </Button>
-              </div>
+  <Button
+    onClick={getRecommendations}
+    disabled={isLoading || Object.keys(fieldErrors).some(key => fieldErrors[key])}
+    className="flex-1"
+  >
+    {isLoading ? (
+      <>
+        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+        Getting Recommendations...
+      </>
+    ) : (
+      'Get Specialist Recommendations'
+    )}
+  </Button>
+  <Button variant="outline" className="flex-1" onClick={clearForm}>
+    Clear
+  </Button>
+</div>
+
             </CardContent>
           </Card>
 
