@@ -761,6 +761,61 @@ function giveNotes(weatherMain = ''){
     return note[randomIdx];
 }
 
+// function to get emoji icon for moon phase
+
+const moonNotes = {
+    "0":["Marks the start of a new lunar cycle.", "Traditionally linked with fresh beginnings.", "A great time to set new goals."],
+    "1":["A slim crescent appears after sunset.", "The illuminated side is increasing daily.", "Seen low in the western sky in the evening.", "Symbolizes growth and potential."],
+    "2":["Half the moon’s face is visible.", "Rises at noon and sets around midnight.", "Represents balance between light and dark."],
+    "3":["The moon is almost full and getting brighter.", "Symbolizes progress and momentum.", "The illuminated portion is more than half."],
+    "4":["The entire face is illuminated.", "Brightest night of the month.", "Often associated with heightened emotions and energy."],
+    "5":["Illumination starts decreasing after full moon.", "Known as the “disseminating moon.”", "Symbolizes gratitude and sharing."],
+    "6":["Another half-moon, but now waning.", "Sometimes called the “third quarter.”", "Symbolizes reassessment before a new cycle."],
+    "7":["A slim crescent before the new moon.", "Known as the “balsamic moon.”", "A time for preparing for new beginnings."]    
+}
+function getMoon(moon){
+    if(moon == 0 || moon == 1){
+        const randomIdx = Math.floor(Math.random()*moonNotes["0"].length);
+        const moonNote = moonNotes[0][randomIdx]
+        return ["🌑", "New Moon", moonNote];
+    }
+    if(moon <= 0.24 && moon >= 0.01){
+        const randomIdx = Math.floor(Math.random()*moonNotes["1"].length);
+        const moonNote = moonNotes[1][randomIdx]
+        return ["🌒", "Waxing Crescent", moonNote];
+    }
+    if(moon == 0.25){
+        const randomIdx = Math.floor(Math.random()*moonNotes["2"].length);
+        const moonNote = moonNotes[2][randomIdx]
+        return ["🌓", "First Quarter", moonNote];
+    }
+    if(moon <= 0.49 && moon >= 0.26){
+        const randomIdx = Math.floor(Math.random()*moonNotes["3"].length);
+        const moonNote = moonNotes[3][randomIdx]
+        return ["🌔","Waxing Gibbous", moonNote];
+    }
+    if(moon == 0.5){
+        const randomIdx = Math.floor(Math.random()*moonNotes["4"].length);
+        const moonNote = moonNotes[4][randomIdx]
+        return ["🌕", "Full Moon", moonNote];
+    }
+    if(moon <= 0.74 && moon >= 0.51){
+        const randomIdx = Math.floor(Math.random()*moonNotes["5"].length);
+        const moonNote = moonNotes[5][randomIdx]
+        return ["🌖", "Waning Gibbous", moonNote];
+    }
+    if(moon == 0.75){
+        const randomIdx = Math.floor(Math.random()*moonNotes["6"].length);
+        const moonNote = moonNotes[6][randomIdx]
+        return ["🌗", "Last Quarter", moonNote];
+    }
+    if(moon <= 0.99 && moon >= 0.76){
+        const randomIdx = Math.floor(Math.random()*moonNotes["7"].length);
+        const moonNote = moonNotes[7][randomIdx]
+        return ["🌘", "Waning Crescent", moonNote];
+    }
+}
+
 function showWeatherForecast(data) {
     const settings = getSettings();
     const isCelsius = settings.tempUnit === 'celsius';
@@ -775,6 +830,15 @@ function showWeatherForecast(data) {
     const summaries = forecast.map(day => `<td>${day.weather[0].description}</td>`).join("");
     const icons = forecast.map(day => `<td><img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"></td>`).join("");
     const noteForUser = forecast.map(day => `<td class = "notes"><p class="notes-txt">${giveNotes(day.weather[0].main)}</p></td>`).join("");
+    //moon phase
+    const moonEmoji = forecast.map(day => { 
+        const[emoji, name, note] = getMoon(day.moon_phase); 
+        return `<td class = "phase"><p class = "phase-emoji">${emoji}</p><p class = "phase-name"><strong>${name}</strong></p></td>`}).join("");
+    const moonName = forecast.map(day => { 
+        const[emoji, name, note] = getMoon(day.moon_phase); 
+        return `<td class = "phase"><p class="phase-note">${note}</p></td>`}).join("");
+
+
 
 
     document.getElementById("forecast").style.display = "block";
@@ -787,6 +851,8 @@ function showWeatherForecast(data) {
         <tr><th>Summary</th>${summaries}</tr>
         <tr><th>Something for you!<br>(hover to unlock)</th>${noteForUser}</tr>
         <tr><th>Icon</th>${icons}</tr>
+        <tr><th rowspan = "2">Moon Phase</th>${moonEmoji}</tr>
+        <tr>${moonName}</tr>
     `;
 
     if (toggle === 0) {
@@ -801,6 +867,8 @@ function showWeatherForecast(data) {
         });
     }
 
+    console.log('whole weather data : ', data);
+    console.log("daily weather data = ", data.daily);
     console.log("weather1 = ", data.daily[0].weather[0].main);  //just for debug purpose
 
     applyWeatherTheme(extractWeatherInfo(data.daily[0].weather[0].main));
